@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { LogOut, User, Shield, Clock } from "lucide-react";
+import { SiteHeader } from "@/components/header";
+import { SiteFooter } from "@/components/footer";
 
 export default async function DashboardPage() {
   await requireAuth();
