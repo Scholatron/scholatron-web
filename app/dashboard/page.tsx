@@ -2,11 +2,14 @@ import { redirect } from "next/navigation";
 import { getTokenFromCookie, getUserFromCookie, requireAuth } from "@/lib/auth/server";
 import { displayName } from "@/lib/auth/client";
 import { signOut } from "@/lib/auth/actions";
+import Image from "next/image";
+import logo from "@/components/images/logo.png"; // <-- added
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, User, Shield, Clock } from "lucide-react";
+import { LogOut, User, Clock } from "lucide-react"; // <-- removed Shield
 import { SiteHeader } from "@/components/header";
 import { SiteFooter } from "@/components/footer";
 
@@ -14,7 +17,7 @@ export default async function DashboardPage() {
   await requireAuth();
   const token = await getTokenFromCookie();
   const user = await getUserFromCookie();
-  
+
   if (!token || !user) {
     redirect("/login");
   }
@@ -25,10 +28,18 @@ export default async function DashboardPage() {
       <header className="border-b border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center">
-              <Shield className="w-4 h-4" />
+            <div className="w-8 h-8 text-primary-foreground rounded-lg flex items-center justify-center overflow-hidden">
+              {/* Replaced Shield with logo Image */}
+              <Image
+                src={logo}
+                alt="Scholatron logo"
+                width={24}
+                height={24}
+                priority
+                className="object-contain"
+              />
             </div>
-            <h1 className="text-xl font-bold font-brand text-primary">SCUD Dashboard</h1>
+            <h1 className="text-xl font-bold font-brand text-primary">Scholatron Dashboard</h1>
           </div>
 
           <div className="flex items-center gap-4">
@@ -107,7 +118,14 @@ export default async function DashboardPage() {
           <Card className="border border-border bg-card">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
-                <Shield className="w-5 h-5 text-primary" />
+                {/* Replaced Shield with small logo Image */}
+                <Image
+                  src={logo}
+                  alt="Scholatron logo"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
                 Authentication Status
               </CardTitle>
             </CardHeader>

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   const token = exchangeData.session.access_token;
 
   // Verify token via backend and get custom JWT
-  const backendUrl = process.env.BACKEND || "http://localhost:3001";
+  const backendUrl = process.env.BACKEND || "http://localhost:3000/api";
   const verifyResponse = await fetch(`${backendUrl}/auth/verify-token`, {
     method: "POST",
     headers: {
