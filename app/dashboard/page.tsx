@@ -1,5 +1,5 @@
-// app/dashboard/page.tsx
-import { redirect } from "next/navigation";import { getTokenFromCookie, getUserFromCookie, requireAuth } from "@/lib/auth/server";
+import { redirect } from "next/navigation";
+import { getTokenFromCookie, getUserFromCookie, requireAuth } from "@/lib/auth/server";
 import { displayName } from "@/lib/auth/client";
 import { signOut } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";

@@ -1,4 +1,4 @@
-// lib/auth/client.ts (client-safe functions)
+// lib/auth/client.ts
 export function displayName(user: any): string {
   return user?.name || user?.username || user?.email || "User";
 }
