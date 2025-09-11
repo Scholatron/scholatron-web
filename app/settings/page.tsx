@@ -49,26 +49,32 @@ export default function SettingsPage() {
 
   // Animation variants for sections
   const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    hidden: { opacity: 0, scale: 0.98 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: "easeOut" } },
   };
 
   // Animation variants for inputs
   const inputVariants = {
-    focus: { scale: 1.02, boxShadow: "0 0 0 3px color-mix(in oklab, var(--ring) 30%, transparent)", transition: { duration: 0.2 } },
-    blur: { scale: 1, boxShadow: "none", transition: { duration: 0.2 } },
+    focus: { scale: 1.01, boxShadow: "0 0 0 2px color-mix(in oklab, var(--ring) 20%, transparent)", transition: { duration: 0.3 } },
+    blur: { scale: 1, boxShadow: "none", transition: { duration: 0.3 } },
   };
 
   // Animation variants for buttons
   const buttonVariants = {
-    hover: { scale: 1.05, transition: { duration: 0.2 } },
-    tap: { scale: 0.95, transition: { duration: 0.1 } },
+    hover: { scale: 1.03, transition: { duration: 0.3 } },
+    tap: { scale: 0.98, transition: { duration: 0.2 } },
+  };
+
+  // Animation variants for checkboxes/radio labels
+  const labelVariants = {
+    hover: { x: 3, transition: { duration: 0.3 } },
+    rest: { x: 0, transition: { duration: 0.3 } },
   };
 
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 bg-[var(--gradient-hero)]">
       <motion.h1
-        className="tt-heading text-4xl md:text-5xl font-brand font-extrabold text-center mb-12 animate-glow"
+        className="text-4xl md:text-5xl font-black text-center mb-12 text-foreground"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -79,7 +85,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Profile Info */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -90,7 +96,7 @@ export default function SettingsPage() {
               <span className="text-muted-foreground font-medium">Full Name</span>
               <motion.input
                 type="text"
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -103,7 +109,7 @@ export default function SettingsPage() {
               <span className="text-muted-foreground font-medium">Email Address</span>
               <motion.input
                 type="email"
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -116,7 +122,7 @@ export default function SettingsPage() {
               <span className="text-muted-foreground font-medium">Phone Number</span>
               <motion.input
                 type="tel"
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 variants={inputVariants}
@@ -126,7 +132,7 @@ export default function SettingsPage() {
 
             <motion.button
               type="submit"
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition glow-on-hover"
+              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
@@ -138,7 +144,7 @@ export default function SettingsPage() {
 
         {/* Account Settings */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -149,7 +155,7 @@ export default function SettingsPage() {
               <span className="text-muted-foreground font-medium">Change Password</span>
               <motion.input
                 type="password"
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="New password"
@@ -160,7 +166,7 @@ export default function SettingsPage() {
 
             <motion.button
               type="submit"
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition glow-on-hover"
+              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
@@ -172,7 +178,7 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -182,8 +188,9 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <motion.label
                 className="inline-flex items-center gap-3 cursor-pointer"
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
+                variants={labelVariants}
+                whileHover="hover"
+                initial="rest"
               >
                 <input
                   type="checkbox"
@@ -195,8 +202,9 @@ export default function SettingsPage() {
               </motion.label>
               <motion.label
                 className="inline-flex items-center gap-3 cursor-pointer"
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
+                variants={labelVariants}
+                whileHover="hover"
+                initial="rest"
               >
                 <input
                   type="checkbox"
@@ -208,8 +216,9 @@ export default function SettingsPage() {
               </motion.label>
               <motion.label
                 className="inline-flex items-center gap-3 cursor-pointer"
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
+                variants={labelVariants}
+                whileHover="hover"
+                initial="rest"
               >
                 <input
                   type="checkbox"
@@ -222,7 +231,7 @@ export default function SettingsPage() {
             </div>
             <motion.button
               type="submit"
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition glow-on-hover"
+              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
@@ -234,7 +243,7 @@ export default function SettingsPage() {
 
         {/* Privacy */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -244,8 +253,9 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <motion.label
                 className="inline-flex items-center gap-3 cursor-pointer"
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
+                variants={labelVariants}
+                whileHover="hover"
+                initial="rest"
               >
                 <input
                   type="radio"
@@ -258,8 +268,9 @@ export default function SettingsPage() {
               </motion.label>
               <motion.label
                 className="inline-flex items-center gap-3 cursor-pointer"
-                whileHover={{ x: 5 }}
-                transition={{ duration: 0.2 }}
+                variants={labelVariants}
+                whileHover="hover"
+                initial="rest"
               >
                 <input
                   type="radio"
@@ -273,7 +284,7 @@ export default function SettingsPage() {
             </div>
             <motion.button
               type="submit"
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition glow-on-hover"
+              className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
               variants={buttonVariants}
               whileHover="hover"
               whileTap="tap"
@@ -285,7 +296,7 @@ export default function SettingsPage() {
 
         {/* Appearance */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -295,7 +306,7 @@ export default function SettingsPage() {
             <label className="block">
               <span className="text-muted-foreground font-medium">Theme</span>
               <motion.select
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={theme}
                 onChange={(e) => setTheme(e.target.value)}
                 variants={inputVariants}
@@ -310,7 +321,7 @@ export default function SettingsPage() {
             <label className="block">
               <span className="text-muted-foreground font-medium">Language</span>
               <motion.select
-                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition glow-on-hover"
+                className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
                 variants={inputVariants}
@@ -328,7 +339,7 @@ export default function SettingsPage() {
 
         {/* Security */}
         <motion.section
-          className="tt-card p-8 animate-pulse"
+          className="tt-card p-8"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -336,8 +347,9 @@ export default function SettingsPage() {
           <h2 className="text-3xl font-bold mb-6 text-primary">Security</h2>
           <motion.label
             className="inline-flex items-center gap-3 cursor-pointer"
-            whileHover={{ x: 5 }}
-            transition={{ duration: 0.2 }}
+            variants={labelVariants}
+            whileHover="hover"
+            initial="rest"
           >
             <input
               type="checkbox"
@@ -353,7 +365,7 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <motion.section
-          className="tt-card p-8 border-l-4 border-destructive animate-pulse"
+          className="tt-card p-8 border-l-4 border-destructive"
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
@@ -364,7 +376,7 @@ export default function SettingsPage() {
               confirm("Are you sure you want to delete your account? This action cannot be undone.") &&
               alert("Account deleted.")
             }
-            className="bg-destructive text-destructive-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--destructive)_90%,_var(--secondary))] smooth-transition glow-on-hover"
+            className="bg-destructive text-destructive-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--destructive)_90%,_var(--secondary))] smooth-transition"
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
