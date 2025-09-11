@@ -1,117 +1,200 @@
-"use client";
 
-import { useState, useMemo } from "react";
 
-const TABS = ["people", "posts", "clubs"] as const;
-type Tab = (typeof TABS)[number];
 
-const MOCK_PEOPLE = [
-  { id: "u1", name: "Alice Johnson", title: "Software Engineer" },
-  { id: "u2", name: "Bob Smith", title: "Product Manager" },
-  { id: "u3", name: "Clara Lee", title: "UX Designer" },
-];
-const MOCK_POSTS = [
-  { id: "p1", title: "Excited to join the Computer Science Club!" },
-  { id: "p2", title: "Check out this amazing tech event." },
-];
-const MOCK_CLUBS = [
-  { id: "c1", name: "Computer Science Club" },
-  { id: "c2", name: "Music Society" },
-  { id: "c3", name: "Drama Club" },
-];
 
-export default function SearchPage() {
-  const [tab, setTab] = useState<Tab>("people");
-  const [query, setQuery] = useState("");
+import SiteHeader from "@/app/components/header";
 
-  const filteredPeople = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    if (!q) return MOCK_PEOPLE;
-    return MOCK_PEOPLE.filter((p) => p.name.toLowerCase().includes(q) || p.title.toLowerCase().includes(q));
-  }, [query]);
 
-  const filteredPosts = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    if (!q) return MOCK_POSTS;
-    return MOCK_POSTS.filter((p) => p.title.toLowerCase().includes(q));
-  }, [query]);
+import { SiteFooter } from "@/app/components/footer";
 
-  const filteredClubs = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    if (!q) return MOCK_CLUBS;
-    return MOCK_CLUBS.filter((c) => c.name.toLowerCase().includes(q));
-  }, [query]);
 
-  return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <input
-        type="search"
-        className="w-full rounded-full border border-border px-4 py-2 focus:ring-2 focus:ring-ring text-foreground bg-background placeholder:text-muted-foreground"
-        placeholder="Search people, posts, clubs"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+import { Sidebar } from "@/app/components/sidebar";
 
-      <div className="flex justify-center mt-4 gap-4 text-sm font-semibold">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-4 py-2 rounded-full cursor-pointer ${
-              tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-            }`}
-            aria-selected={tab === t}
-            role="tab"
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
 
-      <div className="mt-6">
-        {tab === "people" &&
-          (filteredPeople.length === 0 ? (
-            <p className="text-muted-foreground text-center">No people found.</p>
-          ) : (
-            filteredPeople.map(({ id, name, title }) => (
-              <div
-                key={id}
-                className="p-4 border border-border rounded-lg mb-4 hover:bg-muted/10 cursor-pointer"
-              >
-                <p className="text-foreground font-semibold">{name}</p>
-                <p className="text-muted-foreground text-sm">{title}</p>
-              </div>
-            ))
-          ))}
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-        {tab === "posts" &&
-          (filteredPosts.length === 0 ? (
-            <p className="text-muted-foreground text-center">No posts found.</p>
-          ) : (
-            filteredPosts.map(({ id, title }) => (
-              <div
-                key={id}
-                className="p-4 border border-border rounded-lg mb-4 hover:bg-muted/10 cursor-pointer"
-              >
-                <p className="text-foreground">{title}</p>
-              </div>
-            ))
-          ))}
 
-        {tab === "clubs" &&
-          (filteredClubs.length === 0 ? (
-            <p className="text-muted-foreground text-center">No clubs found.</p>
-          ) : (
-            filteredClubs.map(({ id, name }) => (
-              <div
-                key={id}
-                className="p-4 border border-border rounded-lg mb-4 hover:bg-muted/10 cursor-pointer"
-              >
-                <p className="text-foreground font-semibold">{name}</p>
-              </div>
-            ))
-          ))}
-      </div>
+import type { AppUser, Student, VerifiedUser } from "@/lib/auths/types";
+
+
+import Link from "next/link";
+
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+
+export default async function HomePage() {
+import { Card, CardContent } from "@/components/ui/card"
+
+
+
+
+  const supabase = createSupabaseServerClient();
+
+
+  const { data: { user } } = await supabase.auth.getUser();
+  let headerUser: AppUser | null = null;
+
+
+
+  if (user) {
+
+
+    // fetch student profile
+
+
+    const { data: studentRow } = await supabase
+
+
+      .from("students")
+
+
+      .select("uid, name, regno, dob, dept, personal_email, phone")
+
+
+      .eq("uid", user.id)
+
+
+      .maybeSingle();
+      const verified: VerifiedUser = {
+
+
+
+      uid: user.id,
+
+
+      supabase_user_id: user.id,
+
+
+      email: user.email ?? null,
+
+
+      username: user.user_metadata?.preferred_username ?? user.user_metadata?.username ?? null,
+
+
+      avatar_url: user.user_metadata?.avatar_url ?? null,
+
+
+      roles: Array.isArray(user.user_metadata?.roles) ? user.user_metadata?.roles : [],
+
+
+      permissions: Array.isArray(user.user_metadata?.permissions) ? user.user_metadata?.permissions : [],
+
+
+    };
+    headerUser = { ...verified, student: (studentRow as Student | null) ?? null };
+
+
+
+  }
+  const displayName =
+
+
+
+    headerUser?.student?.name ?? headerUser?.username ?? headerUser?.email ?? "User";
+
+
+  const initial =
+
+
+    headerUser?.student?.name?.charAt(0) ??
+
+
+    headerUser?.email?.charAt(0) ??
+
+
+    "U";
+    return (
+
+
+
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+
+
+      <SiteHeader user={headerUser} />
+
+
+      <div className="flex flex-1">
+
+
+        <Sidebar />
+
+
+        <main className="flex-1 px-4 py-6 md:px-8 lg:px-10">
+
+
+          <section className="mx-auto max-w-5xl space-y-4">
+
+
+            <Link href="/create/post">
+
+
+              <Card className="hover:bg-accent/10 transition-colors cursor-pointer">
+
+
+                <CardContent className="p-4">
+
+
+                  <div className="flex items-center gap-3">
+
+
+                    <Avatar className="h-10 w-10">
+
+
+                      <AvatarImage
+
+
+                        src={headerUser?.avatar_url || undefined}
+
+
+                        alt={displayName}
+
+
+                      />
+
+
+                      <AvatarFallback>{initial}</AvatarFallback>
+
+
+                    </Avatar>
+
+
+                    <span className="text-muted-foreground flex-1">
+
+
+                      What&apos;s on your mind today?
+
+
+                    </span>
+
+
+                  </div>
+
+
+                </CardContent>
+
+
+              </Card>
+
+
+            </Link>
+
+
+            {/* Add feed or dashboard widgets here */}
+
+
+          </section>
+
+
+        </main>
+         </div>
+
+
+
+      <SiteFooter />
+
     </div>
+
   );
+
 }
