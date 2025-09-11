@@ -3,20 +3,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
 import SiteHeader from "@/app/components/header";
 import { Sidebar } from "@/app/components/sidebar";
 import { SiteFooter } from "@/app/components/footer";
 
-// Mock data — replace with real results as needed
-type Person = { id: string; name: string; title?: string };
+// Types
+type School = { id: string; name: string; fullName?: string };
 type Post = { id: string; title: string };
 type Club = { id: string; name: string };
 
-const MOCK_PEOPLE: Person[] = [
-  { id: "u1", name: "Alice Johnson", title: "Software Engineer" },
-  { id: "u2", name: "Bob Smith", title: "Product Manager" },
-  { id: "u3", name: "Clara Lee", title: "UX Designer" },
+// Mock data
+const MOCK_SCHOOLS: School[] = [
+  { id: "s1", name: "SCOPE", fullName: "School of Computer Science and Engineering" },
+  { id: "s2", name: "SENSE", fullName: "School of Electronics Engineering" },
+  { id: "s3", name: "SAS", fullName: "School of Advanced Sciences" },
+  { id: "s4", name: "HOT", fullName: "School of Hotel & Tourism Studies" },
 ];
 
 const MOCK_POSTS: Post[] = [
@@ -30,7 +31,7 @@ const MOCK_CLUBS: Club[] = [
   { id: "c3", name: "Drama Club" },
 ];
 
-const TAB_KEYS = ["people", "posts", "clubs"] as const;
+const TAB_KEYS = ["schools", "posts", "clubs"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 export default function SearchPage() {
@@ -38,18 +39,17 @@ export default function SearchPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Search query
   const [query, setQuery] = useState("");
 
-  // Initialize active tab from URL (?t=people|posts|clubs), default to "people"
+  // Initial tab from URL (?t=schools|posts|clubs)
   const initialTab: TabKey = useMemo(() => {
     const t = (searchParams.get("t") || "").toLowerCase();
-    return (TAB_KEYS.includes(t as TabKey) ? t : "people") as TabKey;
+    return (TAB_KEYS.includes(t as TabKey) ? t : "schools") as TabKey;
   }, [searchParams]);
 
   const [tab, setTab] = useState<TabKey>(initialTab);
 
-  // Keep state in sync if the URL changes (e.g., back/forward navigation)
+  // Sync state with URL
   useEffect(() => {
     const t = (searchParams.get("t") || "").toLowerCase();
     if (TAB_KEYS.includes(t as TabKey) && t !== tab) {
@@ -57,10 +57,10 @@ export default function SearchPage() {
     }
   }, [searchParams, tab]);
 
-  // Update URL when tab changes (shareable deep link)
+  // Update URL when tab changes
   const onChangeTab = useCallback(
     (value: string) => {
-      const next = (value as TabKey) || "people";
+      const next = (value as TabKey) || "schools";
       setTab(next);
       const params = new URLSearchParams(searchParams.toString());
       params.set("t", next);
@@ -69,14 +69,14 @@ export default function SearchPage() {
     [pathname, router, searchParams]
   );
 
-  // Filtered results (client-side demo)
-  const filteredPeople = useMemo(() => {
+  // Filter results
+  const filteredSchools = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return MOCK_PEOPLE;
-    return MOCK_PEOPLE.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        (p.title ? p.title.toLowerCase().includes(q) : false)
+    if (!q) return MOCK_SCHOOLS;
+    return MOCK_SCHOOLS.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        (s.fullName ? s.fullName.toLowerCase().includes(q) : false)
     );
   }, [query]);
 
@@ -93,7 +93,7 @@ export default function SearchPage() {
   }, [query]);
 
   const counts = {
-    people: filteredPeople.length,
+    schools: filteredSchools.length,
     posts: filteredPosts.length,
     clubs: filteredClubs.length,
   };
@@ -103,122 +103,154 @@ export default function SearchPage() {
       <SiteHeader />
       <div className="flex flex-1 min-h-0">
         <Sidebar />
-        <main className="flex-1 p-4 md:p-8">
-          <div className="mx-auto max-w-3xl">
-            {/* Shell card for glass effect */}
-            <div className="rounded-[var(--radius-xl)] border border-input bg-card/70 backdrop-blur-xl shadow-sm p-4 md:p-8">
-              <div className="flex items-end justify-between gap-3 mb-6">
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Search</h1>
-                  <p className="text-sm text-muted-foreground">
-                    Find people, posts, and clubs in one place.
-                  </p>
-                </div>
-              </div>
-
-              {/* Search input */}
-              <div className="mb-6">
-                <div className="relative">
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search people, posts, clubs"
-                    className="w-full rounded-full border border-input bg-background/90 px-5 py-3 pr-10 shadow-sm transition focus:ring-2 focus:ring-ring hover:shadow-md"
-                  />
-                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    ⌘K
-                  </span>
-                </div>
-              </div>
-
-              {/* Segmented tabs */}
-              <Tabs value={tab} onValueChange={onChangeTab} className="w-full">
-                <TabsList className="mb-3 grid w-full grid-cols-3 rounded-[var(--radius-xl)] border border-input bg-muted/60 p-1 shadow-inner">
-                  <TabsTrigger
-                    value="people"
-                    className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow"
-                  >
-                    People ({counts.people})
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="posts"
-                    className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow"
-                  >
-                    Posts ({counts.posts})
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="clubs"
-                    className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow"
-                  >
-                    Clubs ({counts.clubs})
-                  </TabsTrigger>
-                </TabsList>
-
-                {/* People */}
-                <TabsContent value="people" className="mt-4">
-                  {filteredPeople.length === 0 ? (
-                    <div className="text-muted-foreground text-center">
-                      No people found.
-                    </div>
-                  ) : (
-                    <ul className="space-y-3">
-                      {filteredPeople.map(({ id, name, title }) => (
-                        <li
-                          key={id}
-                          className="rounded-[var(--radius-lg)] border border-input bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-muted/60 hover:shadow-md"
-                        >
-                          <div className="font-semibold">{name}</div>
-                          {title ? (
-                            <div className="text-sm text-muted-foreground">{title}</div>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </TabsContent>
-
-                {/* Posts */}
-                <TabsContent value="posts" className="mt-4">
-                  {filteredPosts.length === 0 ? (
-                    <div className="text-muted-foreground text-center">
-                      No posts found.
-                    </div>
-                  ) : (
-                    <ul className="space-y-3">
-                      {filteredPosts.map(({ id, title }) => (
-                        <li
-                          key={id}
-                          className="rounded-[var(--radius-lg)] border border-input bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-muted/60 hover:shadow-md"
-                        >
-                          <div className="font-semibold">{title}</div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </TabsContent>
-
-                {/* Clubs */}
-                <TabsContent value="clubs" className="mt-4">
-                  {filteredClubs.length === 0 ? (
-                    <div className="text-muted-foreground text-center">
-                      No clubs found.
-                    </div>
-                  ) : (
-                    <ul className="space-y-3">
-                      {filteredClubs.map(({ id, name }) => (
-                        <li
-                          key={id}
-                          className="rounded-[var(--radius-lg)] border border-input bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:bg-muted/60 hover:shadow-md"
-                        >
-                          <div className="font-semibold">{name}</div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </TabsContent>
-              </Tabs>
+        <main className="flex-1 p-6 md:p-10">
+          <div className="mx-auto max-w-4xl space-y-6">
+            {/* Page title */}
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold">Search</h1>
+              <p className="text-sm text-muted-foreground">
+                Find schools, posts, and clubs in one place.
+              </p>
             </div>
+
+            {/* Search input (tokens only) */}
+            <div className="relative">
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search schools, posts, clubs"
+                className="
+                  w-full rounded-[--radius-xl]
+                  border border-input
+                  bg-card
+                  px-5 py-3 pr-10 shadow-sm
+                  focus:outline-none focus:ring-2 focus:ring-ring
+                  transition
+                "
+              />
+              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                ⌘K
+              </span>
+            </div>
+
+            {/* Tabs (tokens only) */}
+            <Tabs value={tab} onValueChange={onChangeTab} className="w-full">
+              <TabsList
+                className="
+                  mb-4 grid w-full grid-cols-3
+                  rounded-[--radius-xl]
+                  border border-input
+                  bg-muted
+                  p-1
+                "
+              >
+                <TabsTrigger
+                  value="schools"
+                  className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  Schools ({counts.schools})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="posts"
+                  className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  Posts ({counts.posts})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="clubs"
+                  className="rounded-full px-3 py-2 text-sm transition data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  Clubs ({counts.clubs})
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Schools */}
+              <TabsContent value="schools" className="mt-2">
+                {filteredSchools.length === 0 ? (
+                  <div className="text-muted-foreground text-center">
+                    No schools found.
+                  </div>
+                ) : (
+                  <ul className="space-y-3">
+                    {filteredSchools.map(({ id, name, fullName }) => (
+                      <li
+                        key={id}
+                        className="
+                          rounded-[--radius-lg]
+                          border border-border
+                          bg-card
+                          p-4 shadow-sm
+                          hover:bg-muted
+                          transition
+                        "
+                      >
+                        <div className="font-semibold">{name}</div>
+                        {fullName && (
+                          <div className="text-sm text-muted-foreground">
+                            {fullName}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </TabsContent>
+
+              {/* Posts */}
+              <TabsContent value="posts" className="mt-2">
+                {filteredPosts.length === 0 ? (
+                  <div className="text-muted-foreground text-center">
+                    No posts found.
+                  </div>
+                ) : (
+                  <ul className="space-y-3">
+                    {filteredPosts.map(({ id, title }) => (
+                      <li
+                        key={id}
+                        className="
+                          rounded-[--radius-lg]
+                          border border-border
+                          bg-card
+                          p-4 shadow-sm
+                          hover:bg-muted
+                          transition
+                        "
+                      >
+                        <div className="font-semibold">{title}</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </TabsContent>
+
+              {/* Clubs */}
+              <TabsContent value="clubs" className="mt-2">
+                {filteredClubs.length === 0 ? (
+                  <div className="text-muted-foreground text-center">
+                    No clubs found.
+                  </div>
+                ) : (
+                  <ul className="space-y-3">
+                    {filteredClubs.map(({ id, name }) => (
+                      <li
+                        key={id}
+                        className="
+                          rounded-[--radius-lg]
+                          border border-border
+                          bg-card
+                          p-4 shadow-sm
+                          hover:bg-muted
+                          transition
+                        "
+                      >
+                        <div className="font-semibold">{name}</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </main>
       </div>
