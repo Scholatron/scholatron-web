@@ -1,94 +1,130 @@
 "use client";
 
+import { useState } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import SiteHeader from "@/app/components/header";
+import { SiteFooter } from "@/app/components/footer";
+import { Sidebar } from "@/app/components/sidebar";
 
-type Slot = { time: string; subject: string; room: string; professor: string };
-type Day = { id: string; label: string; items: Slot[] };
-
-const monday: Slot[] = [
-  { time: "08:00 AM - 09:00 AM", subject: "Mathematics", room: "Room 101", professor: "Dr. Alice Johnson" },
-  { time: "09:15 AM - 10:15 AM", subject: "Physics", room: "Room 202", professor: "Prof. Bob Smith" },
-  { time: "10:30 AM - 11:30 AM", subject: "Chemistry", room: "Lab 3", professor: "Dr. Clara Lee" },
-  { time: "11:45 AM - 12:45 PM", subject: "English Literature", room: "Room 105", professor: "Ms. Diana Patel" },
-  { time: "01:30 PM - 02:30 PM", subject: "Computer Science", room: "Room 303", professor: "Prof. Ethan Brown" },
-];
-
-const tuesday: Slot[] = [
-  { time: "08:00 AM - 09:00 AM", subject: "Mathematics II", room: "Room 101", professor: "Dr. Alice Johnson" },
-  { time: "09:15 AM - 10:15 AM", subject: "Mechanics", room: "Room 202", professor: "Prof. Bob Smith" },
-  { time: "10:30 AM - 11:30 AM", subject: "Organic Chemistry", room: "Lab 3", professor: "Dr. Clara Lee" },
-];
-
-const wednesday: Slot[] = [
-  { time: "09:00 AM - 10:00 AM", subject: "Discrete Math", room: "Room 110", professor: "Dr. Alice Johnson" },
-  { time: "10:15 AM - 11:15 AM", subject: "Electromagnetics", room: "Room 204", professor: "Prof. Bob Smith" },
-];
-
-const thursday: Slot[] = monday;
-const friday: Slot[] = tuesday;
-const saturday: Slot[] = wednesday;
-const sunday: Slot[] = wednesday;
-
-const days: Day[] = [
-  { id: "mon", label: "Mon", items: monday },
-  { id: "tue", label: "Tue", items: tuesday },
-  { id: "wed", label: "Wed", items: wednesday },
-  { id: "thu", label: "Thu", items: thursday },
-  { id: "fri", label: "Fri", items: friday },
-  { id: "sat", label: "Sat", items: saturday },
-  { id: "sun", label: "Sun", items: sunday },
-];
+// Sample data for each day (can be customized per day)
+const timetableData = {
+  Monday: [
+    { time: "08:00 AM - 09:00 AM", subject: "Mathematics", room: "Room 101", professor: "Dr. Alice Johnson" },
+    { time: "09:15 AM - 10:15 AM", subject: "Physics", room: "Room 202", professor: "Prof. Bob Smith" },
+    { time: "10:30 AM - 11:30 AM", subject: "Chemistry", room: "Lab 3", professor: "Dr. Clara Lee" },
+    { time: "11:45 AM - 12:45 PM", subject: "English Literature", room: "Room 105", professor: "Ms. Diana Patel" },
+    { time: "01:30 PM - 02:30 PM", subject: "Computer Science", room: "Room 303", professor: "Prof. Ethan Brown" },
+  ],
+  Tuesday: [
+    { time: "08:00 AM - 09:00 AM", subject: "Biology", room: "Lab 1", professor: "Dr. Fiona Green" },
+    { time: "09:15 AM - 10:15 AM", subject: "History", room: "Room 104", professor: "Prof. George White" },
+    { time: "10:30 AM - 11:30 AM", subject: "Mathematics", room: "Room 101", professor: "Dr. Alice Johnson" },
+    { time: "11:45 AM - 12:45 PM", subject: "Physics", room: "Room 202", professor: "Prof. Bob Smith" },
+    { time: "01:30 PM - 02:30 PM", subject: "Art", room: "Studio 5", professor: "Ms. Hannah Lee" },
+  ],
+  Wednesday: [
+    { time: "08:00 AM - 09:00 AM", subject: "Chemistry", room: "Lab 3", professor: "Dr. Clara Lee" },
+    { time: "09:15 AM - 10:15 AM", subject: "Computer Science", room: "Room 303", professor: "Prof. Ethan Brown" },
+    { time: "10:30 AM - 11:30 AM", subject: "English Literature", room: "Room 105", professor: "Ms. Diana Patel" },
+    { time: "11:45 AM - 12:45 PM", subject: "Mathematics", room: "Room 101", professor: "Dr. Alice Johnson" },
+    { time: "01:30 PM - 02:30 PM", subject: "Physics", room: "Room 202", professor: "Prof. Bob Smith" },
+  ],
+  Thursday: [
+    { time: "08:00 AM - 09:00 AM", subject: "Physics", room: "Room 202", professor: "Prof. Bob Smith" },
+    { time: "09:15 AM - 10:15 AM", subject: "Biology", room: "Lab 1", professor: "Dr. Fiona Green" },
+    { time: "10:30 AM - 11:30 AM", subject: "History", room: "Room 104", professor: "Prof. George White" },
+    { time: "11:45 AM - 12:45 PM", subject: "Computer Science", room: "Room 303", professor: "Prof. Ethan Brown" },
+    { time: "01:30 PM - 02:30 PM", subject: "English Literature", room: "Room 105", professor: "Ms. Diana Patel" },
+  ],
+  Friday: [
+    { time: "08:00 AM - 09:00 AM", subject: "Mathematics", room: "Room 101", professor: "Dr. Alice Johnson" },
+    { time: "09:15 AM - 10:15 AM", subject: "Chemistry", room: "Lab 3", professor: "Dr. Clara Lee" },
+    { time: "10:30 AM - 11:30 AM", subject: "Art", room: "Studio 5", professor: "Ms. Hannah Lee" },
+    { time: "11:45 AM - 12:45 PM", subject: "History", room: "Room 104", professor: "Prof. George White" },
+    { time: "01:30 PM - 02:30 PM", subject: "Biology", room: "Lab 1", professor: "Dr. Fiona Green" },
+  ],
+};
 
 export default function DailyTimetable() {
-  const defaultDay = days?.id ?? "mon";
+  const [activeDay, setActiveDay] = useState("Monday");
 
   return (
-    <div className="tt">
-      <h1 className="tt-heading text-2xl font-semibold mb-4">Daily Timetable</h1>
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="min-h-screen bg-background text-foreground p-6 flex flex-col items-center">
+          <h1
+            className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            Weekly Timetable
+          </h1>
 
-      <Tabs defaultValue={defaultDay}>
-        {/* Top tabs bar */}
-        <div className="tt-tabs">
-          <TabsList className="tt-tablist">
-            {days.map((d) => (
-              <TabsTrigger key={d.id} value={d.id} className="tt-trigger">
-                {d.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
-
-        {/* Panels */}
-        {days.map((d) => (
-          <TabsContent key={d.id} value={d.id} className="tt-panel">
-            <div className="tt-cards">
-              {d.items.map(({ time, subject, room, professor }, idx) => (
-                <Card key={subject + time + idx} className="tt-card">
-                  <CardHeader className="tt-card-header">
-                    <CardTitle className="tt-title-sm">{subject}</CardTitle>
-                    <CardDescription className="tt-time">{time}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Separator className="tt-sep" />
-                    <div className="tt-meta">
-                      <div>Room: {room}</div>
-                      <div>Professor: {professor}</div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
-    </div>
-  );
+          <Card className="w-full max-w-4xl shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-2xl text-primary">Class Schedule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="Monday" onValueChange={setActiveDay}>
+                <TabsList className="grid w-full grid-cols-5 mb-4">
+                  {Object.keys(timetableData).map((day) => (
+                    <TabsTrigger
+                      key={day}
+                      value={day}
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    >
+                      {day}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                {Object.entries(timetableData).map(([day, schedule]) => (
+                  <TabsContent key={day} value={day}>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-1/4 text-primary">Time</TableHead>
+                          <TableHead className="w-1/4 text-primary">Subject</TableHead>
+                          <TableHead className="w-1/4 text-primary">Room</TableHead>
+                          <TableHead className="w-1/4 text-primary">Professor</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {schedule.map(({ time, subject, room, professor }, idx) => (
+                          <TableRow
+                            key={idx}
+                            className="hover:bg-muted transition-colors"
+                          >
+                            <TableCell className="font-medium">{time}</TableCell>
+                            <TableCell>{subject}</TableCell>
+                            <TableCell>{room}</TableCell>
+                            <TableCell>{professor}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TabsContent>
+                ))}
+              </Tabs>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+      <SiteFooter />
+    </div>
+  );
 }

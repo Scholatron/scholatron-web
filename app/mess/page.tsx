@@ -2,6 +2,15 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useMemo, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import SiteHeader from "@/app/components/header";
+import { SiteFooter } from "@/app/components/footer";
+import { Sidebar } from "@/app/components/sidebar";
 
 type Item = { dish: string; notes?: string };
 type MenuDay = { breakfast: Item[]; lunch: Item[]; dinner: Item[] };
@@ -57,56 +66,74 @@ export default function MessMenuPage() {
   const menu = useMemo(() => MENUS[day] ?? null, [day]);
 
   return (
-    <div className="tt">
-      <h1 className="tt-title text-2xl font-semibold mb-4">Mess Menu</h1>
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 p-6 flex flex-col items-center bg-background text-foreground">
+          <h1
+            className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            Weekly Mess Menu
+          </h1>
 
-      {/* Top tabs bar (days) */}
-      <Tabs value={day} onValueChange={setDay}>
-        <div className="tt-tabs">
-          <TabsList className="tt-tablist">
-            {DAYS.map((d) => (
-              <TabsTrigger key={d} value={d} className="tt-trigger">
-                {d}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+          <Card className="w-full max-w-4xl shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-2xl text-primary">Menu Schedule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={day} onValueChange={setDay}>
+                <TabsList className="grid w-full grid-cols-7 mb-4">
+                  {DAYS.map((d) => (
+                    <TabsTrigger
+                      key={d}
+                      value={d}
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    >
+                      {d}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-        {/* Day panel */}
-        <TabsContent value={day} className="tt-panel">
-          {!menu ? (
-            <div className="opacity-70">No menu available.</div>
-          ) : (
-            <div className="tt-cards">
-              <MenuCard title="Breakfast" items={menu.breakfast} />
-              <MenuCard title="Lunch" items={menu.lunch} />
-              <MenuCard title="Dinner" items={menu.dinner} />
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+                <TabsContent value={day}>
+                  {!menu ? (
+                    <div className="opacity-70">No menu available.</div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <MenuCard title="Breakfast" items={menu.breakfast} />
+                      <MenuCard title="Lunch" items={menu.lunch} />
+                      <MenuCard title="Dinner" items={menu.dinner} />
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+      <SiteFooter />
     </div>
   );
 }
 
 function MenuCard({ title, items }: { title: string; items: Item[] }) {
   return (
-    <div className="tt-card">
-      <div className="tt-card-header p-4">
-        <div className="tt-title-sm font-medium">{title}</div>
-        <div className="tt-time text-sm">Today</div>
-      </div>
-      <div className="p-4">
-        <hr className="tt-sep" />
-        <ul className="tt-meta">
+    <Card className="shadow-lg">
+      <CardHeader className="p-4">
+        <CardTitle className="text-xl text-primary">{title}</CardTitle>
+        <p className="text-sm text-muted-foreground">Today</p>
+      </CardHeader>
+      <CardContent className="p-4">
+        <ul className="space-y-2">
           {items.map((it, idx) => (
-            <li key={it.dish + idx}>
+            <li key={idx} className="text-foreground">
               {it.dish}
               {it.notes ? ` — ${it.notes}` : ""}
             </li>
           ))}
         </ul>
-      </div>
-    </div>
-  );
+      </CardContent>
+    </Card>
+  );
 }

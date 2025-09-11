@@ -1,15 +1,15 @@
-// app/posts/[post_uid]/comments-section.tsx
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { addComment, deleteComment } from "./actions";
 import { formatDistanceToNow } from "date-fns";
 import { Trash2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { createClient } from "@supabase/supabase-js";
 
 interface Comment {
   uid: string;
@@ -25,10 +25,44 @@ interface CommentsProps {
   isAuthenticated: boolean;
 }
 
+interface StudentData {
+  uid: string;
+  name: string;
+}
+
 export function Comments({ postId, comments, currentUserId, isAuthenticated }: CommentsProps) {
   const [commentText, setCommentText] = useState("");
   const [showAllComments, setShowAllComments] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [studentNames, setStudentNames] = useState<{ [key: string]: string }>({});
+
+  // Fetch student names for comment authors
+  useEffect(() => {
+    async function fetchStudentNames() {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const userUids = [...new Set(comments.map(c => c.user_uid))];
+      
+      if (userUids.length > 0) {
+        const { data: students } = await supabase
+          .from("students")
+          .select("uid, name")
+          .in("uid", userUids);
+        
+        if (students) {
+          const nameMap = students.reduce((acc: { [key: string]: string }, student: StudentData) => {
+            acc[student.uid] = student.name;
+            return acc;
+          }, {});
+          setStudentNames(nameMap);
+        }
+      }
+    }
+
+    fetchStudentNames();
+  }, [comments]);
 
   const displayedComments = showAllComments ? comments : comments.slice(0, 3);
 
@@ -113,14 +147,18 @@ export function Comments({ postId, comments, currentUserId, isAuthenticated }: C
             {displayedComments.map((comment) => (
               <div key={comment.uid} className="flex space-x-3 group">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs">U</AvatarFallback>
+                  <AvatarFallback className="text-xs">
+                    {studentNames[comment.user_uid]?.charAt(0) || "U"}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1 space-y-1">
                   <div className="bg-muted/50 rounded-lg p-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <span className="font-semibold text-sm">User</span>
+                        <span className="font-semibold text-sm">
+                          {studentNames[comment.user_uid] || "User"}
+                        </span>
                         <p className="text-sm mt-1 leading-relaxed">
                           {comment.comment_content}
                         </p>

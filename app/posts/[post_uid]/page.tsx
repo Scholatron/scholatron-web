@@ -1,18 +1,21 @@
-// app/posts/[post_uid]/page.tsx
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
+import SiteHeader from "@/app/components/header";
+import { SiteFooter } from "@/app/components/footer";
+import { Sidebar } from "@/app/components/sidebar";
+
 // Link the interactive components
-import { EngagementActions } from "./engangement-actions";
+import { EngagementActions } from "./engagement-actions";
 import { Comments } from "./comments-section";
+import { ImageCarousel } from "./image-carousel";
 
 interface PostData {
   uid: string;
@@ -39,14 +42,9 @@ interface PostEngagement {
   created_at: string;
 }
 
-interface AuthorData {
-  id: string;
-  email: string;
-  user_metadata: {
-    name?: string;
-    username?: string;
-    avatar_url?: string;
-  };
+interface StudentData {
+  uid: string;
+  name: string;
 }
 
 async function getPostData(postUid: string) {
@@ -82,22 +80,22 @@ async function getPostData(postUid: string) {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
 
-  // Replace with real author profile fetch if available
-  const authorData: AuthorData = {
-    id: post.author_uid,
-    email: "user@example.com",
-    user_metadata: {
-      name: "John Doe",
-      username: "johndoe",
-      avatar_url: "/placeholder-avatar.jpg",
-    },
-  };
+  // Fetch author name from students table
+  const { data: author } = await supabase
+    .from("students")
+    .select("uid, name")
+    .eq("uid", post.author_uid)
+    .single();
+
+  if (!author) {
+    return null; // Handle case where author is not found in students table
+  }
 
   return {
     post: post as PostData,
     files: (files || []) as PostFile[],
     engagements: (engagements || []) as PostEngagement[],
-    author: authorData,
+    author: author as StudentData,
     currentUser,
   };
 }
@@ -115,25 +113,22 @@ export default async function PostPage({
 
   const { post, files, engagements, author, currentUser } = data;
 
-// snippet inside default PostPage after computing engagements:
-const likes = engagements.filter(e => e.engagement_type === "like").length;
-const commentsEng = engagements.filter(e => e.engagement_type === "comment");
-const shares = engagements.filter(e => e.engagement_type === "share").length;
+  const likes = engagements.filter(e => e.engagement_type === "like").length;
+  const commentsEng = engagements.filter(e => e.engagement_type === "comment");
+  const shares = engagements.filter(e => e.engagement_type === "share").length;
 
-const isLiked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "like");
-const isBookmarked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "bookmark");
+  const isLiked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "like");
+  const isBookmarked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "bookmark");
 
-// Map PostEngagement[] -> Comment[] with non-null content
-const commentItems = commentsEng
-  .filter(c => typeof c.comment_content === "string" && c.comment_content.trim().length > 0)
-  .map(c => ({
-    uid: c.uid,
-    user_uid: c.user_uid,
-    comment_content: c.comment_content as string,
-    created_at: c.created_at,
-  }));
+  const commentItems = commentsEng
+    .filter(c => typeof c.comment_content === "string" && c.comment_content.trim().length > 0)
+    .map(c => ({
+      uid: c.uid,
+      user_uid: c.user_uid,
+      comment_content: c.comment_content as string,
+      created_at: c.created_at,
+    }));
 
-  // Separate media files
   const images = files.filter((f) => f.contentType?.startsWith("image/"));
   const videos = files.filter((f) => f.contentType?.startsWith("video/"));
   const otherFiles = files.filter(
@@ -143,28 +138,26 @@ const commentItems = commentsEng
 
   return (
     <div className="min-h-screen bg-background">
+      <SiteHeader/>
+      <div className="flex flex-1">
+        <Sidebar/>
       <div className="container mx-auto max-w-2xl py-8 px-4">
         <Card className="w-full">
-          {/* Post Header */}
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={author.user_metadata.avatar_url} />
+                  <AvatarImage src="/placeholder-avatar.jpg" />
                   <AvatarFallback>
-                    {author.user_metadata.name?.charAt(0) ||
-                      author.user_metadata.username?.charAt(0) ||
-                      "U"}
+                    {author.name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
                   <Link
-                    href={`/profile/${author.user_metadata.username || author.id}`}
+                    href={`/profile/${author.uid}`}
                     className="font-semibold text-sm hover:underline"
                   >
-                    {author.user_metadata.name ||
-                      author.user_metadata.username ||
-                      "Anonymous"}
+                    {author.name || "Anonymous"}
                   </Link>
                   <span className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(post.created_at), {
@@ -180,69 +173,26 @@ const commentItems = commentsEng
           </CardHeader>
 
           <CardContent className="space-y-4">
-            {/* Post Title */}
             {post.title && (
               <h1 className="text-lg font-semibold">{post.title}</h1>
             )}
 
-            {/* Post Description */}
             {post.description && (
               <p className="text-sm leading-relaxed">{post.description}</p>
             )}
 
-            {/* Post Type Badge */}
             {post.type !== "post" && (
               <Badge variant="secondary" className="w-fit">
                 {post.type}
               </Badge>
             )}
 
-            {/* Media Gallery */}
             {(images.length > 0 || videos.length > 0) && (
               <div className="space-y-2">
-                {/* Images */}
                 {images.length > 0 && (
-                  <div
-                    className={`grid gap-2 ${
-                      images.length === 1
-                        ? "grid-cols-1"
-                        : images.length === 2
-                        ? "grid-cols-2"
-                        : images.length === 3
-                        ? "grid-cols-3"
-                        : "grid-cols-2"
-                    }`}
-                  >
-                    {images.map((image, index) => (
-                      <div
-                        key={image.uid}
-                        className={`relative overflow-hidden rounded-lg ${
-                          images.length === 1
-                            ? "aspect-square max-h-96"
-                            : images.length > 3 && index >= 3
-                            ? "hidden"
-                            : "aspect-square"
-                        }`}
-                      >
-                        <Image
-                          src={image.file_url}
-                          alt={image.file_name}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-200"
-                        />
-                        {images.length > 4 && index === 3 && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <span className="text-white font-semibold">
-                              +{images.length - 4} more
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <ImageCarousel images={images} />
                 )}
 
-                {/* Videos */}
                 {videos.map((video) => (
                   <div key={video.uid} className="relative rounded-lg overflow-hidden">
                     <video
@@ -261,7 +211,6 @@ const commentItems = commentsEng
               </div>
             )}
 
-            {/* Other Files */}
             {otherFiles.length > 0 && (
               <div className="space-y-2">
                 <h4 className="text-sm font-medium text-muted-foreground">
@@ -286,26 +235,27 @@ const commentItems = commentsEng
               </div>
             )}
 
-            {/* Interactive Engagement Actions */}
             <EngagementActions
-  postId={post.uid}
-  isLiked={isLiked}
-  isBookmarked={isBookmarked}
-  likesCount={likes}
-  commentsCount={commentItems.length}
-  sharesCount={shares}
-  isAuthenticated={!!currentUser}
-/>
+              postId={post.uid}
+              isLiked={isLiked}
+              isBookmarked={isBookmarked}
+              likesCount={likes}
+              commentsCount={commentItems.length}
+              sharesCount={shares}
+              isAuthenticated={!!currentUser}
+            />
 
-<Comments
-  postId={post.uid}
-  comments={commentItems}
-  currentUserId={currentUser?.id}
-  isAuthenticated={!!currentUser}
-/>
+            <Comments
+              postId={post.uid}
+              comments={commentItems}
+              currentUserId={currentUser?.id}
+              isAuthenticated={!!currentUser}
+            />
           </CardContent>
         </Card>
       </div>
+      </div>
+      <SiteFooter></SiteFooter>
     </div>
   );
 }

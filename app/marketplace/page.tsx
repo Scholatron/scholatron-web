@@ -5,6 +5,9 @@ import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 
+import SiteHeader from "@/app/components/header";
+import { SiteFooter } from "@/app/components/footer";
+import { Sidebar } from "@/app/components/sidebar";
 type Listing = {
   id: string;
   title: string;
@@ -18,7 +21,7 @@ const MOCK: Listing[] = [
   {
     id: "1",
     title: "Vintage Lamp",
-    price: "$25",
+    price: "₹200",
     image: "/images/lamp.jpg",
     createdAt: "2025-09-10",
     tags: ["lighting", "vintage", "home"],
@@ -26,7 +29,7 @@ const MOCK: Listing[] = [
   {
     id: "2",
     title: "Wooden Chair",
-    price: "$45",
+    price: "₹45",
     image: "/images/chair.jpg",
     createdAt: "2025-09-09",
     tags: ["furniture", "wood", "seating"],
@@ -34,7 +37,7 @@ const MOCK: Listing[] = [
   {
     id: "3",
     title: "Ceramic Vase",
-    price: "$30",
+    price: "₹120",
     image: "/images/vase.jpg",
     createdAt: "2025-09-08",
     tags: ["decor", "ceramic", "vase"],
@@ -42,7 +45,7 @@ const MOCK: Listing[] = [
   {
     id: "4",
     title: "Succulent Plant",
-    price: "$15",
+    price: "₹120",
     image: "/images/plant.jpg",
     createdAt: "2025-09-07",
     tags: ["plant", "greenery", "home"],
@@ -50,7 +53,7 @@ const MOCK: Listing[] = [
   {
     id: "5",
     title: "Coffee Table",
-    price: "$60",
+    price: "₹400",
     image: "/images/table.jpg",
     createdAt: "2025-09-06",
     tags: ["furniture", "table", "living room"],
@@ -83,6 +86,10 @@ export default function MarketplacePage() {
   }, [listings, query]);
 
   return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader></SiteHeader>
+            <div className="flex flex-1">
+              <Sidebar/>
     <div className="max-w-7xl mx-auto px-4 py-8">
       <motion.h1
         className="text-3xl font-bold mb-6 text-foreground"
@@ -165,6 +172,8 @@ export default function MarketplacePage() {
           )}
         </motion.div>
       </AnimatePresence>
-    </div>
+    </div></div>
+        <SiteFooter></SiteFooter>
+  </div>
   );
 }
