@@ -12,10 +12,9 @@ import SiteHeader from "@/app/components/header";
 import { SiteFooter } from "@/app/components/footer";
 import { Sidebar } from "@/app/components/sidebar";
 
-// Link the interactive components
-import { EngagementActions } from "./engagement-actions";
-import { Comments } from "./comments-section";
-import { ImageCarousel } from "./image-carousel";
+import { EngagementActions } from "@/app/components/posts/engagement-actions";
+import { Comments } from "@/app/components/posts/comments-section";
+import { ImageCarousel } from "@/app/components/posts/image-carousel";
 
 interface PostData {
   uid: string;
@@ -50,7 +49,6 @@ interface StudentData {
 async function getPostData(postUid: string) {
   const supabase = createSupabaseServerClient();
 
-  // Get post data
   const { data: post, error: postError } = await supabase
     .from("posts")
     .select("*")
@@ -58,29 +56,26 @@ async function getPostData(postUid: string) {
     .single();
 
   if (postError || !post) {
+    console.error("Post fetch error:", postError?.message || "No post found");
     return null;
   }
 
-  // Get post files
   const { data: files } = await supabase
     .from("post_files")
     .select("*")
     .eq("post_id", postUid)
     .order("created_at", { ascending: true });
 
-  // Get post engagements
   const { data: engagements } = await supabase
     .from("post_engagements")
     .select("*")
     .eq("post_id", postUid)
     .order("created_at", { ascending: false });
 
-  // Get current user for personalized engagement state
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
 
-  // Fetch author name from students table
   const { data: author } = await supabase
     .from("students")
     .select("uid, name")
@@ -88,7 +83,8 @@ async function getPostData(postUid: string) {
     .single();
 
   if (!author) {
-    return null; // Handle case where author is not found in students table
+    console.error("Author not found for UID:", post.author_uid);
+    return null;
   }
 
   return {
@@ -113,16 +109,26 @@ export default async function PostPage({
 
   const { post, files, engagements, author, currentUser } = data;
 
-  const likes = engagements.filter(e => e.engagement_type === "like").length;
-  const commentsEng = engagements.filter(e => e.engagement_type === "comment");
-  const shares = engagements.filter(e => e.engagement_type === "share").length;
+  const likes = engagements.filter((e) => e.engagement_type === "like").length;
+  const commentsEng = engagements.filter((e) => e.engagement_type === "comment");
+  const shares = engagements.filter((e) => e.engagement_type === "share").length;
 
-  const isLiked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "like");
-  const isBookmarked = !!currentUser && engagements.some(e => e.user_uid === currentUser.id && e.engagement_type === "bookmark");
+  const isLiked =
+    !!currentUser &&
+    engagements.some(
+      (e) => e.user_uid === currentUser.id && e.engagement_type === "like"
+    );
+  const isBookmarked =
+    !!currentUser &&
+    engagements.some(
+      (e) => e.user_uid === currentUser.id && e.engagement_type === "bookmark"
+    );
 
   const commentItems = commentsEng
-    .filter(c => typeof c.comment_content === "string" && c.comment_content.trim().length > 0)
-    .map(c => ({
+    .filter(
+      (c) => typeof c.comment_content === "string" && c.comment_content.trim().length > 0
+    )
+    .map((c) => ({
       uid: c.uid,
       user_uid: c.user_uid,
       comment_content: c.comment_content as string,
@@ -138,124 +144,121 @@ export default async function PostPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader/>
+      <SiteHeader />
       <div className="flex flex-1">
-        <Sidebar/>
-      <div className="container mx-auto max-w-2xl py-8 px-4">
-        <Card className="w-full">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src="/placeholder-avatar.jpg" />
-                  <AvatarFallback>
-                    {author.name?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <Link
-                    href={`/profile/${author.uid}`}
-                    className="font-semibold text-sm hover:underline"
-                  >
-                    {author.name || "Anonymous"}
-                  </Link>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDistanceToNow(new Date(post.created_at), {
-                      addSuffix: true,
-                    })}
-                  </span>
-                </div>
-              </div>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            {post.title && (
-              <h1 className="text-lg font-semibold">{post.title}</h1>
-            )}
-
-            {post.description && (
-              <p className="text-sm leading-relaxed">{post.description}</p>
-            )}
-
-            {post.type !== "post" && (
-              <Badge variant="secondary" className="w-fit">
-                {post.type}
-              </Badge>
-            )}
-
-            {(images.length > 0 || videos.length > 0) && (
-              <div className="space-y-2">
-                {images.length > 0 && (
-                  <ImageCarousel images={images} />
-                )}
-
-                {videos.map((video) => (
-                  <div key={video.uid} className="relative rounded-lg overflow-hidden">
-                    <video
-                      controls
-                      className="w-full max-h-96 bg-black"
-                      preload="metadata"
+        <Sidebar />
+        <div className="container mx-auto max-w-2xl py-8 px-4">
+          <Card className="w-full">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src="/placeholder-avatar.jpg" />
+                    <AvatarFallback>{author.name?.charAt(0) || "U"}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <Link
+                      href={`/profile/${author.uid}`}
+                      className="font-semibold text-sm hover:underline"
                     >
-                      <source
-                        src={video.file_url}
-                        type={video.contentType || "video/mp4"}
-                      />
-                      Your browser does not support the video tag.
-                    </video>
+                      {author.name || "Anonymous"}
+                    </Link>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDistanceToNow(new Date(post.created_at), {
+                        addSuffix: true,
+                      })}
+                    </span>
                   </div>
-                ))}
+                </div>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
               </div>
-            )}
+            </CardHeader>
 
-            {otherFiles.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Attachments
-                </h4>
-                <div className="space-y-1">
-                  {otherFiles.map((file) => (
-                    <a
-                      key={file.uid}
-                      href={file.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent text-sm"
+            <CardContent className="space-y-4">
+              {post.title && <h1 className="text-lg font-semibold">{post.title}</h1>}
+
+              {post.description && (
+                <p className="text-sm leading-relaxed">{post.description}</p>
+              )}
+
+              {post.type !== "post" && (
+                <Badge variant="secondary" className="w-fit">
+                  {post.type}
+                </Badge>
+              )}
+
+              {(images.length > 0 || videos.length > 0) && (
+                <div className="space-y-2">
+                  {images.length > 0 && <ImageCarousel images={images} />}
+
+                  {videos.map((video) => (
+                    <div
+                      key={video.uid}
+                      className="relative rounded-lg overflow-hidden"
                     >
-                      <div className="h-8 w-8 bg-muted rounded flex items-center justify-center">
-                        📎
-                      </div>
-                      <span className="truncate">{file.file_name}</span>
-                    </a>
+                      <video
+                        controls
+                        className="w-full max-h-96 bg-black"
+                        preload="metadata"
+                      >
+                        <source
+                          src={video.file_url}
+                          type={video.contentType || "video/mp4"}
+                        />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            <EngagementActions
-              postId={post.uid}
-              isLiked={isLiked}
-              isBookmarked={isBookmarked}
-              likesCount={likes}
-              commentsCount={commentItems.length}
-              sharesCount={shares}
-              isAuthenticated={!!currentUser}
-            />
+              {otherFiles.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Attachments
+                  </h4>
+                  <div className="space-y-1">
+                    {otherFiles.map((file) => (
+                      <a
+                        key={file.uid}
+                        href={file.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-2 p-2 rounded-md hover:bg-accent text-sm"
+                      >
+                        <div className="h-8 w-8 bg-muted rounded flex items-center justify-center">
+                          📎
+                        </div>
+                        <span className="truncate">{file.file_name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            <Comments
-              postId={post.uid}
-              comments={commentItems}
-              currentUserId={currentUser?.id}
-              isAuthenticated={!!currentUser}
-            />
-          </CardContent>
-        </Card>
+              <EngagementActions
+                postId={post.uid}
+                isLiked={isLiked}
+                isBookmarked={isBookmarked}
+                likesCount={likes}
+                commentsCount={commentItems.length}
+                sharesCount={shares}
+                isAuthenticated={!!currentUser}
+              />
+
+              <Comments
+                postId={post.uid}
+                comments={commentItems}
+                currentUserId={currentUser?.id}
+                isAuthenticated={!!currentUser}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-      </div>
-      <SiteFooter></SiteFooter>
+      <SiteFooter />
     </div>
   );
 }
