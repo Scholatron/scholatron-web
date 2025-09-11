@@ -18,7 +18,11 @@ function formatDate(dateStr: string) {
 export default function ProfilePage() {
   const { name, profilePic, clubs, posts, branch } = PROFILE;
 
-  return (
+  return (    
+  <div className="container mx-auto p-4">
+     <SiteHeader />
+      <div className="flex flex-1">
+        <Sidebar />
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       {/* Profile header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6">
@@ -85,5 +89,8 @@ export default function ProfilePage() {
         )}
       </section>
     </div>
+        </div>
+          <SiteFooter />
+        </div>
   );
 }
