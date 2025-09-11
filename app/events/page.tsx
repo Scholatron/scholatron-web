@@ -21,9 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Calendar, Clock, MapPin, FileText, Edit, Trash } from 'lucide-react';
 import { format } from 'date-fns';
-import SiteHeader from '@/app/components/header'; // Adjust path if needed
-import {Sidebar} from '@/app/components/sidebar'; // Adjust path if needed
-import {SiteFooter} from '@/app/components/footer'; // Adjust path if needed
+
 interface Event {
   uid: string;
   start_time: string;
@@ -95,9 +93,7 @@ export default function EventsPage() {
 
   return (
     <div className="container mx-auto p-4">
-   <SiteHeader />
-    <div className="flex flex-1">
-      <Sidebar />
+      {/* Page header */}
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Events</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -271,8 +267,6 @@ export default function EventsPage() {
           </Card>
         ))}
       </div>
-    </div>
-      <SiteFooter />
     </div>
   );
 }
