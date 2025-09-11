@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
 import logo from "@/components/images/logo.jpg";
-import { signOut } from "@/lib/auth/actions";
+import { signOut } from "@/lib/auths/actions";
 
 export function SiteHeaderClient({ user }: { user: { name?: string; image?: string } | null }) {
   const router = useRouter();

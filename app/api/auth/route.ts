@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const { access_token: jwt } = await verifyResponse.json();
 
   // Set custom JWT in an HttpOnly cookie for security
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.set("jwt", jwt, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development",

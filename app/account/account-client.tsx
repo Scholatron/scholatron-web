@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/browser";
-import { displayName, getInitials } from "@/lib/auth/client"; // Client-safe imports
+import { displayName, getInitials } from "@/lib/auths/client"; // Client-safe imports
 
 type Profile = {
   login?: string;

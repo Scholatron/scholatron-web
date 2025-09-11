@@ -1,7 +1,7 @@
 // app/api/privacy/options/route.ts
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getUserFromCookie } from "@/lib/auth/server";
+import { getUserFromCookie } from "@/lib/auths/server";
 
 export async function GET() {
   const user = await getUserFromCookie();

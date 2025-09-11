@@ -191,3 +191,293 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+/* Timetable + Tabs (uses theme tokens from globals.css) */
+
+.tt {
+  --tt-gap: 0.875rem;
+  --tt-radius: var(--radius);
+}
+
+/* Page title with primary→secondary gradient */
+.tt-heading {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Tabs bar */
+.tt-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25rem;
+}
+
+/* Tabs list: subtle secondary tint and scrollable */
+.tt-tablist {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: color-mix(in oklch, var(--secondary) 10%, transparent);
+  border-radius: calc(var(--tt-radius) - 2px);
+  padding: 0.25rem;
+}
+
+/* Tabs trigger: default, hover, focus, active (Radix data-state) */
+.tt-trigger {
+  appearance: none;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+  border-radius: calc(var(--tt-radius) - 4px);
+  padding: 0.375rem 0.625rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.tt-trigger:hover {
+  background: color-mix(in oklch, var(--secondary) 12%, transparent);
+  border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
+}
+.tt-trigger:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 40%, transparent);
+  border-color: var(--primary);
+}
+.tt-trigger[data-state="active"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Panels and cards */
+.tt-panel {
+  margin-top: var(--tt-gap);
+}
+.tt-cards {
+  display: grid;
+  gap: var(--tt-gap);
+}
+@media (min-width: 640px) { .tt-cards { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .tt-cards { grid-template-columns: 1fr 1fr 1fr; } }
+
+/* Card shell with primary accent */
+.tt-card {
+  border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+  border-left: 4px solid var(--primary);
+  border-radius: var(--tt-radius);
+  background: var(--background);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.tt-card:hover {
+  box-shadow: 0 8px 24px color-mix(in oklch, var(--secondary) 25%, transparent);
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
+}
+
+/* Card header with a faint secondary underlay and primary divider */
+.tt-card-header {
+  padding-bottom: 0.25rem !important;
+  background: color-mix(in oklch, var(--secondary) 7%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--primary) 18%, var(--border));
+  border-top-left-radius: calc(var(--tt-radius) - 2px);
+  border-top-right-radius: calc(var(--tt-radius) - 2px);
+}
+
+/* Subject title and time */
+.tt-title-sm { font-size: 1.05rem; }
+.tt-time { color: color-mix(in oklch, var(--secondary) 45%, var(--foreground)); }
+
+/* Separator tinted by primary→secondary */
+.tt-sep {
+  margin: 0.5rem 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--primary) 45%, var(--border)),
+    color-mix(in oklch, var(--secondary) 45%, var(--border))
+  );
+  border: 0;
+}
+
+/* Meta row with a slight primary tint */
+.tt-meta {
+  font-size: 0.925rem;
+  color: color-mix(in oklch, var(--primary) 25%, var(--foreground));
+}
+
+/* Mess Menu UI (using existing theme tokens) */
+.mess-app {
+  --gap: 0.875rem;
+  --radius: var(--radius);
+}
+
+/* Title with gradient using primary → secondary */
+.mess-title {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Sticky tabs bar */
+.mess-tabs-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25rem;
+  margin-bottom: var(--gap);
+}
+
+/* Tabs list with secondary tint */
+.mess-tabs-list {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.25rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: color-mix(in oklch, var(--secondary) 10%, transparent);
+}
+
+/* Individual tab trigger */
+.mess-tab-trigger {
+  appearance: none;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+  border-radius: calc(var(--radius) - 4px);
+  padding: 0.375rem 0.625rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.mess-tab-trigger:hover {
+  background: color-mix(in oklch, var(--secondary) 12%, transparent);
+  border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
+}
+
+.mess-tab-trigger:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--ring) 40%, transparent);
+  border-color: var(--ring);
+}
+
+.mess-tab-trigger[data-state="active"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Content panel */
+.mess-content {
+  margin-top: var(--gap);
+}
+
+/* Cards grid */
+.mess-cards-grid {
+  display: grid;
+  gap: var(--gap);
+}
+
+@media (min-width: 640px) {
+  .mess-cards-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mess-cards-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* Menu card */
+.mess-card {
+  border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--background);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.mess-card:hover {
+  box-shadow: 0 8px 24px color-mix(in oklch, var(--secondary) 25%, transparent);
+  transform: translateY(-1px);
+  border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
+}
+
+/* Card header */
+.mess-card-header {
+  padding: 1rem;
+  padding-bottom: 0.25rem;
+  background: color-mix(in oklch, var(--secondary) 7%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--primary) 18%, var(--border));
+  border-top-left-radius: calc(var(--radius) - 2px);
+  border-top-right-radius: calc(var(--radius) - 2px);
+}
+
+/* Card title and subtitle */
+.mess-card-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.mess-card-subtitle {
+  font-size: 0.875rem;
+  color: color-mix(in oklch, var(--secondary) 45%, var(--foreground));
+  margin-top: 0.25rem;
+}
+
+/* Card content */
+.mess-card-content {
+  padding: 1rem;
+}
+
+/* Separator */
+.mess-separator {
+  margin: 0.5rem 0;
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--primary) 45%, var(--border)),
+    color-mix(in oklch, var(--secondary) 45%, var(--border))
+  );
+}
+
+/* Menu items list */
+.mess-items-list {
+  font-size: 0.925rem;
+  color: color-mix(in oklch, var(--primary) 25%, var(--foreground));
+}
+
+.mess-items-list li {
+  margin-bottom: 0.25rem;
+}
+
+/* Empty state */
+.mess-empty {
+  opacity: 0.7;
+  color: var(--muted-foreground);
+  text-align: center;
+  padding: 2rem;
+}

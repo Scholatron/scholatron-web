@@ -33,7 +33,7 @@ import {
 import SiteHeader from "@/app/components/header";
 import { SiteFooter } from "@/app/components/footer";
 import { useEffect, useState } from "react";
-import { VerifiedUser } from "@/lib/auth/types";
+import { VerifiedUser } from "@/lib/auths/types";
 
 const featuresMain = [
   {
@@ -272,8 +272,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </motion.section>
-
-      <section className="py-20 px-4">
+    <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/10">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -293,46 +292,35 @@ export default function LandingPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-4 grid-rows-3 gap-3 h-[600px] md:h-[500px]"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
           >
-            {featuresMain.slice(0, 6).map((feature, index) => (
+{featuresMain.map((feature, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className={`${getHierarchicalGridClasses(index)} smooth-transition`}
+                className="relative group"
               >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group bg-card overflow-hidden">
-                  <CardHeader className="pb-1 p-2">
-                    <div className="flex items-center gap-1 mb-1">
-                      <div className="p-1 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors flex-shrink-0">
-                        <feature.icon
-                          className={`text-primary ${index === 0 || index === 4 ? "h-4 w-4" : "h-3 w-3"}`}
-                        />
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-card overflow-hidden rounded-2xl">
+                  <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <CardHeader className="pt-8 pb-4 px-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-4 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors duration-300">
+                        <feature.icon className="h-8 w-8 text-primary" />
                       </div>
-                      <Badge
-                        variant="secondary"
-                        className={`${index === 0 || index === 4 ? "text-[10px]" : "text-[9px]"} flex-shrink-0 px-1 py-0`}
-                      >
+                      <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
                         {feature.badge}
                       </Badge>
                     </div>
-                    <CardTitle
-                      className={`group-hover:text-primary transition-colors leading-tight ${
-                        index === 0 || index === 4 ? "text-sm" : "text-xs"
-                      }`}
-                    >
+                    <CardTitle className="text-2xl font-semibold group-hover:text-primary transition-colors duration-300">
                       {feature.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-2 pt-0">
-                    <CardDescription
-                      className={`leading-tight overflow-hidden ${
-                        index === 0 || index === 4 ? "text-[11px]" : "text-[10px]"
-                      }`}
-                    >
+                  <CardContent className="px-6 pb-8">
+                    <CardDescription className="text-base text-muted-foreground leading-relaxed">
                       {feature.description}
                     </CardDescription>
                   </CardContent>
+                  <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Card>
               </motion.div>
             ))}
