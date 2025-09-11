@@ -1,8 +1,7 @@
+// app/page.tsx
 "use client";
 import { motion, type Variants } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import logo from "@/components/images/logo.png"; // Updated to .png
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -196,22 +195,6 @@ const heroVariants: Variants = {
   },
 };
 
-const logoVariants: Variants = {
-  hidden: { opacity: 0, rotate: 0 },
-  visible: {
-    opacity: 1,
-    rotate: 360,
-    transition: {
-      rotate: {
-        repeat: Infinity,
-        duration: 10, // Slow spin (10 seconds per rotation)
-        ease: "linear",
-      },
-      opacity: { duration: 0.5 },
-    },
-  },
-};
-
 const getHierarchicalGridClasses = (index: number) => {
   if (index === 0) return "col-span-2 row-span-2";
   if (index === 1) return "col-span-2 row-span-1";
@@ -254,7 +237,7 @@ export default function LandingPage() {
         initial="hidden"
         animate="visible"
         variants={heroVariants}
-        className="min-h-screen flex flex-col justify-center relative overflow-hidden bg-gradient-to-br from-primary/5 to-accent/5 py-20 px-4"
+        className="relative overflow-hidden bg-gradient-to-br from-primary/5 to-accent/5 py-20 px-4"
       >
         <div className="container mx-auto text-center">
           <motion.div
@@ -263,16 +246,6 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="mb-8"
           >
-            <motion.img
-              src={logo.src}
-              alt="Scholatron logo"
-              width={80}
-              height={80}
-              variants={logoVariants}
-              initial="hidden"
-              animate="visible"
-              className="mx-auto mb-6"
-            />
             <Badge variant="secondary" className="mb-4 inline-flex items-center gap-1">
               <Sparkles className="h-4 w-4" />
               Unified Campus Platform
@@ -299,8 +272,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </motion.section>
-
-      <section className="min-h-screen flex flex-col justify-center py-20 px-4 bg-gradient-to-b from-background to-muted/10">
+    <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/10">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -322,7 +294,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
           >
-            {featuresMain.map((feature, index) => (
+{featuresMain.map((feature, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
@@ -356,7 +328,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col justify-center py-20 px-4 bg-primary">
+      <section className="py-20 px-4 bg-primary">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -366,7 +338,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary-foreground">Why Scholatron?</h2>
-            <p className="text-xl text-primary-foreground/60 max-w-3xl mx-auto text-pretty">
+            <p className="text-xl text-primary-foreground/80 max-w-3xl mx-auto text-pretty">
               Built specifically for modern campus life, Scholatron addresses the unique challenges students and faculty
               face with fragmented digital tools.
             </p>
@@ -381,13 +353,13 @@ export default function LandingPage() {
           >
             {whyScholatronFeatures.map((feature, index) => (
               <motion.div key={index} variants={itemVariants} className="smooth-transition">
-                <Card className="h-full text-xl  border-0 shadow-xl transition-all duration-300 group bg-primary-foreground">
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group bg-primary-foreground">
                   <CardHeader className="pb-4">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 rounded-xl bg-secondary text-primary group-hover:scale-110 transition-transform">
+                      <div className="p-3 rounded-xl bg-secondary text-secondary-foreground group-hover:scale-110 transition-transform">
                         <feature.icon className="h-6 w-6" />
                       </div>
-                      <CardTitle className="text-xl  text-primary group-hover:text-secondary">
+                      <CardTitle className="text-xl group-hover:text-secondary transition-colors text-foreground">
                         {feature.title}
                       </CardTitle>
                     </div>
@@ -404,7 +376,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col justify-center py-20 px-4">
+      <section className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -456,7 +428,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col justify-center py-20 px-4 bg-muted/50">
+      <section className="py-20 px-4 bg-muted/50">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -500,7 +472,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="min-h-screen flex flex-col justify-center py-20 px-4">
+      <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

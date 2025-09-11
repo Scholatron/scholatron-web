@@ -1,10 +1,5 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+// app/post/[post_uid]/page.tsx
 import { notFound } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
@@ -15,6 +10,14 @@ import { Sidebar } from "@/app/components/sidebar";
 import { EngagementActions } from "@/app/components/posts/engagement-actions";
 import { Comments } from "@/app/components/posts/comments-section";
 import { ImageCarousel } from "@/app/components/posts/image-carousel";
+
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { MoreHorizontal } from "lucide-react";
 
 interface PostData {
   uid: string;
@@ -96,11 +99,7 @@ async function getPostData(postUid: string) {
   };
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: { post_uid: string };
-}) {
+export default async function PostPage({ params }: { params: { post_uid: string } }) {
   const data = await getPostData(params.post_uid);
 
   if (!data) {
@@ -115,19 +114,13 @@ export default async function PostPage({
 
   const isLiked =
     !!currentUser &&
-    engagements.some(
-      (e) => e.user_uid === currentUser.id && e.engagement_type === "like"
-    );
+    engagements.some((e) => e.user_uid === currentUser.id && e.engagement_type === "like");
   const isBookmarked =
     !!currentUser &&
-    engagements.some(
-      (e) => e.user_uid === currentUser.id && e.engagement_type === "bookmark"
-    );
+    engagements.some((e) => e.user_uid === currentUser.id && e.engagement_type === "bookmark");
 
   const commentItems = commentsEng
-    .filter(
-      (c) => typeof c.comment_content === "string" && c.comment_content.trim().length > 0
-    )
+    .filter((c) => typeof c.comment_content === "string" && c.comment_content.trim().length > 0)
     .map((c) => ({
       uid: c.uid,
       user_uid: c.user_uid,
@@ -138,8 +131,7 @@ export default async function PostPage({
   const images = files.filter((f) => f.contentType?.startsWith("image/"));
   const videos = files.filter((f) => f.contentType?.startsWith("video/"));
   const otherFiles = files.filter(
-    (f) =>
-      !f.contentType?.startsWith("image/") && !f.contentType?.startsWith("video/")
+    (f) => !f.contentType?.startsWith("image/") && !f.contentType?.startsWith("video/")
   );
 
   return (
@@ -147,7 +139,7 @@ export default async function PostPage({
       <SiteHeader />
       <div className="flex flex-1">
         <Sidebar />
-        <div className="container mx-auto max-w-2xl py-8 px-4">
+        <main className="container mx-auto max-w-2xl py-8 px-4">
           <Card className="w-full">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -175,50 +167,30 @@ export default async function PostPage({
                 </Button>
               </div>
             </CardHeader>
-
             <CardContent className="space-y-4">
               {post.title && <h1 className="text-lg font-semibold">{post.title}</h1>}
-
-              {post.description && (
-                <p className="text-sm leading-relaxed">{post.description}</p>
-              )}
-
+              {post.description && <p className="text-sm leading-relaxed">{post.description}</p>}
               {post.type !== "post" && (
                 <Badge variant="secondary" className="w-fit">
                   {post.type}
                 </Badge>
               )}
-
               {(images.length > 0 || videos.length > 0) && (
                 <div className="space-y-2">
                   {images.length > 0 && <ImageCarousel images={images} />}
-
                   {videos.map((video) => (
-                    <div
-                      key={video.uid}
-                      className="relative rounded-lg overflow-hidden"
-                    >
-                      <video
-                        controls
-                        className="w-full max-h-96 bg-black"
-                        preload="metadata"
-                      >
-                        <source
-                          src={video.file_url}
-                          type={video.contentType || "video/mp4"}
-                        />
+                    <div key={video.uid} className="relative rounded-lg overflow-hidden">
+                      <video controls className="w-full max-h-96 bg-black" preload="metadata">
+                        <source src={video.file_url} type={video.contentType || "video/mp4"} />
                         Your browser does not support the video tag.
                       </video>
                     </div>
                   ))}
                 </div>
               )}
-
               {otherFiles.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Attachments
-                  </h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">Attachments</h4>
                   <div className="space-y-1">
                     {otherFiles.map((file) => (
                       <a
@@ -237,7 +209,6 @@ export default async function PostPage({
                   </div>
                 </div>
               )}
-
               <EngagementActions
                 postId={post.uid}
                 isLiked={isLiked}
@@ -247,7 +218,6 @@ export default async function PostPage({
                 sharesCount={shares}
                 isAuthenticated={!!currentUser}
               />
-
               <Comments
                 postId={post.uid}
                 comments={commentItems}
@@ -256,7 +226,7 @@ export default async function PostPage({
               />
             </CardContent>
           </Card>
-        </div>
+        </main>
       </div>
       <SiteFooter />
     </div>
