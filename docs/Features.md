@@ -1,7 +1,7 @@
 # Features.md [1]
 
 ## Main
-- Posts & Feed — Campus-wide updates, notes, and official posts with scoped visibility (class, club, hostel, public) and attachment support for richer context [1].  
+- Posts & Feed — Campus-wide updates, notes, and official posts with scoped visibility(class, club, hostel, public) and attachment support for richer context [1].  
 - Chats — 1:1 and group conversations across class, club, and hostel with role-aware permissions and lightweight media sharing for timely coordination [1].  
 - Clubs & Communities — Discover, join, and engage with clubs and officer-led announcements within permissioned spaces to reduce noise and ensure trust [1].  
 - Events — Browse fests and hackathons, RSVP, and receive reminders with prioritization by memberships and timetable relevance for better attendance [1].  
@@ -31,7 +31,7 @@
 - Calendar/LMS Sync — Two-way sync with calendars and learning systems to centralize deadlines and minimize manual updates [1].  
 - Offline-first PWA — Installable mobile experience with offline caching for timetables, resources, and recent chats to improve reliability [1].  
 - Moderation & Safety — Expanded reporting queues, audit logs, and scoped moderator roles to keep spaces healthy at scale [1].  
-- Role/Policy Expansion — Finer-grained roles and Row Level Security policies to support special programs and cross-campus access rules [1][2].  
+- Role/Policy Expansion — Finer-grained roles and Row Level Security policies to support special programs and cross-campus access rules [1].  
 - Multi-campus Tenancy — Logical isolation and scoped discovery for institutes or departments under a single platform umbrella [1].  
 
 ## AI integration [1]
