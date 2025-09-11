@@ -271,8 +271,8 @@ export default function EventsPage() {
           </Card>
         ))}
       </div>
-      <SiteFooter />
     </div>
+      <SiteFooter />
     </div>
   );
 }
