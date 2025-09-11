@@ -15,7 +15,7 @@ const ALLOWED_TABLES = new Set([
   "groups",
   "post_engagements",
   "post_files",
-  "social_posts",
+  "announcements",
 ]);
 
 function guard(table: string) {

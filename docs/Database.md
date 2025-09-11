@@ -203,7 +203,7 @@ This document provides a comprehensive overview of the database schema including
 
 ---
 
-### 14. social_posts
+### 14. announcements
 **Purpose:** Stores social media style posts
 
 | Column | Type | Nullable | Default | Foreign Keys |

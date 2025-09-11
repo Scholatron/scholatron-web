@@ -295,12 +295,12 @@ Yes—here is a complete db-api.md you can save and use, documenting GET, POST, 
 ```
 
 
-## social_posts
+## announcements
 
 - Paths:
-    - GET /api/db/social_posts.[^2][^3]
-    - POST /api/db/social_posts.[^3][^2]
-    - DELETE /api/db/social_posts/{uid}.[^2][^3]
+    - GET /api/db/announcements.[^2][^3]
+    - POST /api/db/announcements.[^3][^2]
+    - DELETE /api/db/announcements/{uid}.[^2][^3]
 - Required fields for POST: author_uid, content, visibility; target_id optional; uid and timestamps default.[^1]
 - Sample POST JSON:
 
