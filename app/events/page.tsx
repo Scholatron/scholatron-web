@@ -21,7 +21,9 @@ import {
 } from '@/components/ui/dialog';
 import { Calendar, Clock, MapPin, FileText, Edit, Trash } from 'lucide-react';
 import { format } from 'date-fns';
-
+import SiteHeader from '@/app/components/header'; // Adjust path if needed
+import {Sidebar} from '@/app/components/sidebar'; // Adjust path if needed
+import {SiteFooter} from '@/app/components/footer'; // Adjust path if needed
 interface Event {
   uid: string;
   start_time: string;
