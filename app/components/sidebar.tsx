@@ -19,6 +19,7 @@ import {
   Star,
   MessageSquare,
   Bookmark,
+  ShoppingBag,
   User,
   Settings,
   ChevronRight,
@@ -38,6 +39,7 @@ const NAV: NavItem[] = [
   { href: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
   { href: '/events', label: 'Events', icon: Star },
   { href: '/mess', label: 'Mess', icon: IceCreamBowl },
+  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBag },
   { href: '/profile', label: 'Profile', icon: User },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

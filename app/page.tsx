@@ -264,7 +264,7 @@ export default function LandingPage() {
                 </Link>
               </Button>
               <Button variant="outline" asChild size="lg">
-                <Link href="/features">
+                <Link href="/">
                   Explore Features <ChevronRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>

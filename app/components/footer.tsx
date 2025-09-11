@@ -21,8 +21,7 @@ export function SiteFooter() {
           <h4 className="font-medium mb-3">Product</h4>
           <ul className="space-y-2 text-sm">
             <li><Link href="/features" className="hover:underline">Features</Link></li>
-            <li><Link href="/pricing" className="hover:underline">Pricing</Link></li>
-            <li><Link href="/docs" className="hover:underline">Docs</Link></li>
+            <li><Link href="https://github.com/scholatron/scholatron-web" className="hover:underline">Docs</Link></li>
           </ul>
         </div>
 

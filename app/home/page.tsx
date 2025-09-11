@@ -49,7 +49,7 @@ export default async function HomePage() {
         <main className="flex-1 px-4 py-6 md:px-8 lg:px-10">
           <section className="mx-auto max-w-5xl space-y-4">
             <Link href="/create/post">
-              <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
+              <Card className="hover:bg-accent/80 transition-colors cursor-pointer">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">

@@ -93,7 +93,9 @@ export default function EventsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      {/* Page header */}
+   <SiteHeader />
+    <div className="flex flex-1">
+      <Sidebar />
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Events</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -267,6 +269,8 @@ export default function EventsPage() {
           </Card>
         ))}
       </div>
+      <SiteFooter />
+    </div>
     </div>
   );
 }
