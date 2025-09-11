@@ -1,26 +1,37 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Calendar, Clock, MapPin, FileText, Edit, Trash } from 'lucide-react';
-import { format } from 'date-fns';
+} from "@/components/ui/dialog";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  FileText,
+  Edit,
+  Trash,
+} from "lucide-react";
+import { format } from "date-fns";
+
+import SiteHeader from "@/app/components/header";
+import { Sidebar } from "@/app/components/sidebar";
+import { SiteFooter } from "@/app/components/footer";
 
 interface Event {
   uid: string;
@@ -38,34 +49,34 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
-    start_time: '',
-    end_time: '',
-    description: '',
-    rules: '',
-    venue: '',
-    poster: '',
+    start_time: "",
+    end_time: "",
+    description: "",
+    rules: "",
+    venue: "",
+    poster: "",
   });
 
   // Mock data fetching (replace with actual API call)
   useEffect(() => {
     const mockEvents: Event[] = [
       {
-        uid: '123e4567-e89b-12d3-a456-426614174000',
-        start_time: '2025-10-01T10:00:00Z',
-        end_time: '2025-10-01T12:00:00Z',
-        created_at: '2025-09-01T08:00:00Z',
-        updated_at: '2025-09-01T08:00:00Z',
-        description: 'Annual tech conference',
-        rules: 'No outside food allowed',
-        venue: 'Convention Center',
-        poster: 'https://example.com/poster.jpg',
+        uid: "123e4567-e89b-12d3-a456-426614174000",
+        start_time: "2025-10-01T10:00:00Z",
+        end_time: "2025-10-01T12:00:00Z",
+        created_at: "2025-09-01T08:00:00Z",
+        updated_at: "2025-09-01T08:00:00Z",
+        description: "Annual tech conference",
+        rules: "No outside food allowed",
+        venue: "Convention Center",
+        poster: "https://example.com/poster.jpg",
       },
     ];
     setEvents(mockEvents);
   }, []);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -73,200 +84,208 @@ export default function EventsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add API call to save event
-    console.log('Form submitted:', formData);
+    // Add API call to save event here
+    console.log("Form submitted:", formData);
     setIsDialogOpen(false);
     setFormData({
-      start_time: '',
-      end_time: '',
-      description: '',
-      rules: '',
-      venue: '',
-      poster: '',
+      start_time: "",
+      end_time: "",
+      description: "",
+      rules: "",
+      venue: "",
+      poster: "",
     });
   };
 
   const handleDelete = (uid: string) => {
-    // Add API call to delete event
+    // Add API call to delete event here
     setEvents((prev) => prev.filter((event) => event.uid !== uid));
   };
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Page header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Events</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Add Event
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Event</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium">Start Time</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="datetime-local"
-                    name="start_time"
-                    value={formData.start_time}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">End Time</label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="datetime-local"
-                    name="end_time"
-                    value={formData.end_time}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Description</label>
-                <Textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Enter event description"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Rules</label>
-                <Textarea
-                  name="rules"
-                  value={formData.rules}
-                  onChange={handleInputChange}
-                  placeholder="Enter event rules"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Venue</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    name="venue"
-                    value={formData.venue}
-                    onChange={handleInputChange}
-                    placeholder="Enter venue"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Poster URL</label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    name="poster"
-                    value={formData.poster}
-                    onChange={handleInputChange}
-                    placeholder="Enter poster URL"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                Save Event
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {/* Card grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event) => (
-          <Card key={event.uid} className="border border-border bg-card">
-            {/* Poster */}
-            {event.poster ? (
-              <div className="relative h-40 w-full overflow-hidden rounded-t-md">
-                <Image
-                  src={event.poster}
-                  alt={`${event.description ?? 'Event'} poster`}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-                />
-              </div>
-            ) : null}
-
-            {/* Header */}
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between gap-2">
-                <CardTitle className="text-base text-card-foreground">
-                  {event.description ?? 'Untitled event'}
-                </CardTitle>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-accent text-accent hover:bg-accent/10"
-                  >
-                    <Edit className="h-4 w-4" />
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <SiteHeader />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 container mx-auto p-6 space-y-6">
+          {/* Page header and Add Event dialog */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Events</h1>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                  Add Event
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Event</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">
+                      Start Time
+                    </label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="datetime-local"
+                        name="start_time"
+                        value={formData.start_time}
+                        onChange={handleInputChange}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">End Time</label>
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="datetime-local"
+                        name="end_time"
+                        value={formData.end_time}
+                        onChange={handleInputChange}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Description</label>
+                    <Textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      placeholder="Enter event description"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Rules</label>
+                    <Textarea
+                      name="rules"
+                      value={formData.rules}
+                      onChange={handleInputChange}
+                      placeholder="Enter event rules"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Venue</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        name="venue"
+                        value={formData.venue}
+                        onChange={handleInputChange}
+                        placeholder="Enter venue"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium">Poster URL</label>
+                    <div className="relative">
+                      <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        name="poster"
+                        value={formData.poster}
+                        onChange={handleInputChange}
+                        placeholder="Enter poster URL"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                    Save Event
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(event.uid)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
 
-              {/* Time chips */}
-              <div className="mt-2 flex flex-wrap gap-2">
-                <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                  <Calendar className="mr-1 h-3 w-3" />
-                  {format(new Date(event.start_time), 'PPP p')}
-                </span>
-                <span className="inline-flex items-center rounded-md bg-secondary/10 px-2 py-1 text-xs font-medium text-secondary">
-                  <Clock className="mr-1 h-3 w-3" />
-                  {format(new Date(event.end_time), 'PPP p')}
-                </span>
-              </div>
-            </CardHeader>
+          {/* Events grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.map((event) => (
+              <Card key={event.uid} className="border border-border bg-card">
+                {/* Poster */}
+                {event.poster && (
+                  <div className="relative h-40 w-full overflow-hidden rounded-t-md">
+                    <Image
+                      src={event.poster}
+                      alt={`${event.description ?? "Event"} poster`}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                    />
+                  </div>
+                )}
 
-            {/* Content */}
-            <CardContent className="space-y-3">
-              <div className="flex items-center text-sm text-muted-foreground">
-                <MapPin className="mr-2 h-4 w-4 text-secondary" />
-                <span className="text-card-foreground">{event.venue || 'TBA'}</span>
-              </div>
+                {/* Header */}
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-base text-card-foreground">
+                      {event.description ?? "Untitled event"}
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="border-accent text-accent hover:bg-accent/10"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => handleDelete(event.uid)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
 
-              {event.rules ? (
-                <div className="rounded-md bg-accent/10 p-2 text-xs text-accent">
-                  {event.rules}
-                </div>
-              ) : null}
-            </CardContent>
+                  {/* Time chips */}
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                      <Calendar className="mr-1 h-3 w-3" />
+                      {format(new Date(event.start_time), "PPP p")}
+                    </span>
+                    <span className="inline-flex items-center rounded-md bg-secondary/10 px-2 py-1 text-xs font-medium text-secondary">
+                      <Clock className="mr-1 h-3 w-3" />
+                      {format(new Date(event.end_time), "PPP p")}
+                    </span>
+                  </div>
+                </CardHeader>
 
-            {/* Footer meta */}
-            <CardFooter className="flex justify-between">
-              <span className="text-xs text-muted-foreground">
-                Created {format(new Date(event.created_at), 'PPP')}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                Updated {format(new Date(event.updated_at), 'PPP')}
-              </span>
-            </CardFooter>
-          </Card>
-        ))}
+                {/* Content */}
+                <CardContent className="space-y-3">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <MapPin className="mr-2 h-4 w-4 text-secondary" />
+                    <span className="text-card-foreground">{event.venue || "TBA"}</span>
+                  </div>
+                  {event.rules && (
+                    <div className="rounded-md bg-accent/10 p-2 text-xs text-accent">
+                      {event.rules}
+                    </div>
+                  )}
+                </CardContent>
+
+                {/* Footer meta */}
+                <CardFooter className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    Created {format(new Date(event.created_at), "PPP")}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Updated {format(new Date(event.updated_at), "PPP")}
+                  </span>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </main>
       </div>
+      <SiteFooter />
     </div>
   );
 }

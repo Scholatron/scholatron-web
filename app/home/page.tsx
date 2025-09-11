@@ -66,7 +66,26 @@ export default async function HomePage() {
                 </CardContent>
               </Card>
             </Link>
-            {/* Add feed or dashboard widgets here */}
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  {/* Feed - left (2/3 width) */}
+  <section className="lg:col-span-2 space-y-6">
+    <h2 className="text-2xl font-semibold text-foreground mb-4">Your Feed</h2>
+    {/* Replace below div with dynamic map/render of your feed posts */}
+    <div className="text-muted-foreground italic text-center py-10 border border-border rounded-lg bg-card">
+      Loading feed posts...
+    </div>
+  </section>
+
+  {/* Announcements - right (1/3 width) */}
+  <aside className="space-y-4">
+    <h2 className="text-2xl font-semibold mb-4 text-foreground">Announcements</h2>
+    {/* Replace below div with dynamic map/render of your announcements */}
+    <div className="text-muted-foreground italic text-center py-10 border border-border rounded-lg bg-card">
+      Loading announcements...
+    </div>
+  </aside>
+</section>
+
           </section>
         </main>
       </div>

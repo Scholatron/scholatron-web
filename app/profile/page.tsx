@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
 import { PROFILE, Club, Post } from "@/lib/profile";
+import SiteHeader from "@/app/components/header";
+import { Sidebar } from "@/app/components/sidebar";
+import { SiteFooter } from "@/app/components/footer";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString(undefined, {
@@ -11,44 +13,11 @@ function formatDate(dateStr: string) {
   });
 }
 
-// Placeholder components - replace with actual imports if available
-function SiteHeader() {
-  return (
-    <header className="border-b border-border p-4 bg-background">
-      <h1 className="text-xl font-semibold">Site Header</h1>
-    </header>
-  );
-}
-
-function Sidebar() {
-  return (
-    <aside className="w-64 border-r border-border p-4 bg-background">
-      <nav>
-        <ul className="space-y-2">
-          <li><a href="/" className="text-foreground">Home</a></li>
-          <li><a href="/profile" className="text-foreground">Profile</a></li>
-        </ul>
-      </nav>
-    </aside>
-  );
-}
-
-function SiteFooter() {
-  return (
-    <footer className="border-t border-border p-4 mt-auto bg-background">
-      <p className="text-muted-foreground">Site Footer</p>
-    </footer>
-  );
-}
-
-// Add branch field in PROFILE (update your mock to include this)
-// e.g., export const PROFILE = { name, profilePic, branch: "CSE", clubs, posts }
-
 export default function ProfilePage() {
   const { name, profilePic, clubs, posts, branch } = PROFILE;
 
-  return (    
-    <div className="flex flex-col min-h-screen container mx-auto p-4">
+  return (
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <SiteHeader />
       <div className="flex flex-1">
         <Sidebar />

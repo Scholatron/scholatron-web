@@ -2,6 +2,10 @@
 
 import { useState, useMemo } from "react";
 
+import SiteHeader from "@/app/components/header";
+import { Sidebar } from "@/app/components/sidebar";
+import { SiteFooter } from "@/app/components/footer";
+
 // Mock posts data
 const ALL_POSTS = [
   { id: "1", title: "First Post", content: "Hello world!" },
@@ -16,7 +20,6 @@ export default function HomePage() {
   const [bookmarkedIds, setBookmarkedIds] = useState(INITIAL_BOOKMARKS);
   const [showBookmarks, setShowBookmarks] = useState(false);
 
-  // Filter posts based on whether to show all or only bookmarks
   const postsToShow = useMemo(() => {
     if (showBookmarks) {
       return ALL_POSTS.filter((post) => bookmarkedIds.has(post.id));
@@ -24,7 +27,6 @@ export default function HomePage() {
     return ALL_POSTS;
   }, [showBookmarks, bookmarkedIds]);
 
-  // Toggle bookmark logic for a post (optional for interactivity)
   const toggleBookmark = (postId: string) => {
     setBookmarkedIds((prev) => {
       const newSet = new Set(prev);
@@ -35,57 +37,64 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Navigation */}
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setShowBookmarks(false)}
-          className={`px-4 py-2 rounded ${
-            showBookmarks
-              ? "bg-muted text-muted-foreground"
-              : "bg-primary text-primary-foreground"
-          }`}
-        >
-          Home
-        </button>
-        <button
-          onClick={() => setShowBookmarks(true)}
-          className={`px-4 py-2 rounded ${
-            showBookmarks
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground"
-          }`}
-        >
-          Bookmarks
-        </button>
-      </div>
-
-      {/* Posts List */}
-      {postsToShow.length === 0 ? (
-        <p className="text-center text-muted-foreground">
-          {showBookmarks ? "No bookmarked posts." : "No posts available."}
-        </p>
-      ) : (
-        postsToShow.map((post) => (
-          <div
-            key={post.id}
-            className="border border-border rounded-lg p-4 mb-4 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
-            <p className="text-muted-foreground mb-2">{post.content}</p>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <SiteHeader />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 max-w-4xl mx-auto p-6">
+          {/* Navigation */}
+          <div className="flex gap-4 mb-6">
             <button
-              onClick={() => toggleBookmark(post.id)}
-              className={`px-3 py-1 rounded ${
-                bookmarkedIds.has(post.id)
-                  ? "bg-accent text-accent-foreground"
+              onClick={() => setShowBookmarks(false)}
+              className={`px-4 py-2 rounded ${
+                showBookmarks
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-primary text-primary-foreground"
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => setShowBookmarks(true)}
+              className={`px-4 py-2 rounded ${
+                showBookmarks
+                  ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground"
               }`}
             >
-              {bookmarkedIds.has(post.id) ? "Remove Bookmark" : "Bookmark"}
+              Bookmarks
             </button>
           </div>
-        ))
-      )}
+
+          {/* Posts List */}
+          {postsToShow.length === 0 ? (
+            <p className="text-center text-muted-foreground">
+              {showBookmarks ? "No bookmarked posts." : "No posts available."}
+            </p>
+          ) : (
+            postsToShow.map((post) => (
+              <div
+                key={post.id}
+                className="border border-border rounded-lg p-4 mb-4 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
+                <p className="text-muted-foreground mb-2">{post.content}</p>
+                <button
+                  onClick={() => toggleBookmark(post.id)}
+                  className={`px-3 py-1 rounded ${
+                    bookmarkedIds.has(post.id)
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {bookmarkedIds.has(post.id) ? "Remove Bookmark" : "Bookmark"}
+                </button>
+              </div>
+            ))
+          )}
+        </main>
+      </div>
+      <SiteFooter />
     </div>
   );
 }
