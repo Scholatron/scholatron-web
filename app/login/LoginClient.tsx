@@ -42,9 +42,11 @@ export function LoginClient() {
             <h2 className="text-lg font-sans text-muted-foreground">
               Welcome To,
             </h2>
-            <CardTitle className="text-3xl font-brand text-gradient-primary">
-              SCHOLATRON: Campus Connect
+            <CardTitle className="text-3xl text-gradient-primary">
+              <span className="font-semibold uppercase tracking-wide">SCHOLATRON</span>
             </CardTitle>
+            
+               <span className="font-semibold arial">Campus Connect</span>
           </div>
 
           <CardDescription className="text-secondary-foreground">
