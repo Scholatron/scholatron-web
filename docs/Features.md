@@ -1,6 +1,6 @@
 # Features.md [1]
 
-## Main [1]
+## Main
 - Posts & Feed — Campus-wide updates, notes, and official posts with scoped visibility (class, club, hostel, public) and attachment support for richer context [1].  
 - Chats — 1:1 and group conversations across class, club, and hostel with role-aware permissions and lightweight media sharing for timely coordination [1].  
 - Clubs & Communities — Discover, join, and engage with clubs and officer-led announcements within permissioned spaces to reduce noise and ensure trust [1].  
