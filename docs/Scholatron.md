@@ -1,6 +1,6 @@
 # Scholatron.md [1]
 
-Scholatron is a unified campus platform that brings academics, social life, and official communications into one student-first web app to replace fragmented WhatsApp groups, notice boards, scattered drive links, and word-of-mouth updates [1].  
+Scholatron is a unified campus platform that brings academics, social life, and official communications into one student-first web app to replace fragmented WhatsApp classes, notice boards, scattered drive links, and word-of-mouth updates [1].  
 This document details the scope, features, architecture, security model, and implementation plan for a pure **Next.js** + Supabase stack ready for hackathon execution and beyond [1][2][14].  
 
 ## Problem [1]

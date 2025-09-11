@@ -30,7 +30,7 @@ export async function GET() {
   }
 
   const { data: classes, error: classesError } = await supabase
-    .from("class_divisions")
+    .from("classes")
     .select("uid, class_id (name)")
     .contains("students", [user.uid]);
 

@@ -1,4 +1,3 @@
-// app/api/user/classes/route.ts
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -7,21 +6,25 @@ export async function GET(request: Request) {
   const user_uuid = searchParams.get("user_uuid");
 
   if (!user_uuid) {
-    return NextResponse.json({ error: "user_uuid is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "user_uuid is required" },
+      { status: 400 }
+    );
   }
 
   const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
-    .from("class_divisions")
+    .from("classes")
     .select("uid, class_id")
-    .contains("students", [user_uuid]);
+    .contains("students", [user_uuid]);  // ← filter array contains
 
   if (error) {
-    return NextResponse.json({ error: `Database error: ${error.message}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `Database error: ${error.message}` },
+      { status: 500 }
+    );
   }
 
-  // Rename class_id to name for consistency
-  const formattedData = data.map(item => ({ uid: item.uid, name: item.class_id }));
-
-  return NextResponse.json({ data: formattedData });
+  const formatted = data.map((c) => ({ uid: c.uid, name: c.class_id }));
+  return NextResponse.json({ data: formatted });
 }

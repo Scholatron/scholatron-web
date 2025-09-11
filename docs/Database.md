@@ -67,7 +67,7 @@ This document provides a comprehensive overview of the database schema including
 
 ---
 
-### 5. class_divisions
+### 5. classes
 **Purpose:** Stores class division information
 
 | Column | Type | Nullable | Default | Foreign Keys |
@@ -161,7 +161,7 @@ This document provides a comprehensive overview of the database schema including
 
 ---
 
-### 11. groups
+### 11. classes
 **Purpose:** Stores group information
 
 | Column | Type | Nullable | Default | Foreign Keys |
@@ -241,9 +241,9 @@ This document provides a comprehensive overview of the database schema including
 ### Array Relationships (No FK constraints)
 - **chatrooms.admins** and **chatrooms.members**: Arrays of UUIDs (likely referencing students/users)
 - **chatroom_messages.seen_by**: Array of UUIDs tracking who has seen the message
-- **class_divisions.students**: Array of student UUIDs
+- **classes.students**: Array of student UUIDs
 - **clubs.board**, **clubs.members**, **clubs.senior_members**: Arrays of user UUIDs
-- **groups.admins** and **groups.members**: Arrays of user UUIDs
+- **classes.admins** and **classes.members**: Arrays of user UUIDs
 
 ## Key Observations
 
@@ -266,7 +266,7 @@ The database supports both:
 ### User Management
 - **Students** with basic profile information
 - **Faculty** with department and contact details
-- **Groups** and **Clubs** with member hierarchies
+- **classes** and **Clubs** with member hierarchies
 - **Class divisions** for academic organization
 
 ### Missing Foreign Key Constraints

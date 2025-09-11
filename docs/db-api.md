@@ -108,12 +108,12 @@ Yes—here is a complete db-api.md you can save and use, documenting GET, POST, 
 ```
 
 
-## class_divisions
+## classes
 
 - Paths:
-    - GET /api/db/class_divisions.[^3][^2]
-    - POST /api/db/class_divisions.[^2][^3]
-    - DELETE /api/db/class_divisions/{uid}.[^3][^2]
+    - GET /api/db/classes.[^3][^2]
+    - POST /api/db/classes.[^2][^3]
+    - DELETE /api/db/classes/{uid}.[^3][^2]
 - Required fields for POST: class_id, students (array of UUIDs); uid defaults to gen_random_uuid(), timestamps default to now().[^1]
 - Sample POST JSON:
 
@@ -235,12 +235,12 @@ Yes—here is a complete db-api.md you can save and use, documenting GET, POST, 
 ```
 
 
-## groups
+## classes
 
 - Paths:
-    - GET /api/db/groups.[^3][^2]
-    - POST /api/db/groups.[^2][^3]
-    - DELETE /api/db/groups/{uid}.[^3][^2]
+    - GET /api/db/classes.[^3][^2]
+    - POST /api/db/classes.[^2][^3]
+    - DELETE /api/db/classes/{uid}.[^3][^2]
 - Required fields for POST: name, created_by, admins, members; uid and timestamps default.[^1]
 - Sample POST JSON:
 
