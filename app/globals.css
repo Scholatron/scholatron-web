@@ -12,34 +12,25 @@
   --card-foreground: hsl(240 10% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(240 10% 3.9%);
-
   --primary: hsl(259 100% 43%);            /* #4012c9 */
   --primary-foreground: hsl(0 0% 98%);
-
   --secondary: hsl(238 85% 79%);           /* #a7a9f6 */
   --secondary-foreground: hsl(240 10% 3.9%);
   --muted: hsl(210 40% 98%);
   --muted-foreground: hsl(215 16% 47%);
-
   --accent: hsl(324 87% 59%);              /* #f931bd */
   --accent-foreground: hsl(0 0% 98%);
-
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
-
   --border: hsl(220 13% 91%);
   --input: hsl(220 13% 91%);
   --ring: hsl(259 100% 43%);
-
   --chart-1: hsl(259 100% 43%);
   --chart-2: hsl(238 85% 79%);
   --chart-3: hsl(324 87% 59%);
   --chart-4: hsl(245 58% 60%);
   --chart-5: hsl(256 65% 70%);
-
   --radius: 0.5rem;
-
-  /* Custom Scholatron gradients */
   --gradient-primary: linear-gradient(135deg, hsl(259 100% 43%) 0%, hsl(238 85% 79%) 100%);
   --gradient-accent: linear-gradient(135deg, hsl(324 87% 59%) 0%, hsl(259 100% 43%) 100%);
   --gradient-hero: linear-gradient(135deg, hsl(259 100% 43% / 0.03) 0%, hsl(324 87% 59% / 0.03) 100%);
@@ -53,42 +44,41 @@
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
-/* Keep the same light theme for dark mode */
+/* Scholatron: Dark theme with custom color scheme */
 .dark {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(240 10% 3.9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(240 10% 3.9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(240 10% 3.9%);
-  --primary: hsl(259 100% 43%);
+  --background: hsl(240 10% 10%);          /* dark gray background */
+  --foreground: hsl(0 0% 95%);             /* light text */
+  --card: hsl(240 10% 15%);
+  --card-foreground: hsl(0 0% 95%);
+  --popover: hsl(240 10% 15%);
+  --popover-foreground: hsl(0 0% 95%);
+  --primary: hsl(259 100% 50%);            /* brighter primary for dark mode */
   --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(238 85% 79%);
-  --secondary-foreground: hsl(240 10% 3.9%);
-  --muted: hsl(210 40% 98%);
-  --muted-foreground: hsl(215 16% 47%);
-  --accent: hsl(324 87% 59%);
+  --secondary: hsl(238 85% 85%);           /* lighter secondary */
+  --secondary-foreground: hsl(240 10% 10%);
+  --muted: hsl(240 10% 20%);
+  --muted-foreground: hsl(240 10% 60%);
+  --accent: hsl(324 87% 65%);              /* slightly brighter accent */
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(220 13% 91%);
-  --input: hsl(220 13% 91%);
-  --ring: hsl(259 100% 43%);
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --border: hsl(240 10% 25%);
+  --input: hsl(240 10% 25%);
+  --ring: hsl(259 100% 50%);
+  --sidebar: hsl(240 10% 15%);
+  --sidebar-foreground: hsl(0 0% 95%);
+  --sidebar-primary: hsl(259 100% 50%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 10% 20%);
+  --sidebar-accent-foreground: hsl(0 0% 95%);
+  --sidebar-border: hsl(240 10% 25%);
+  --sidebar-ring: hsl(259 100% 50%);
 }
 
 /* Tailwind v4 theme variables bridge */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-brand: "Chewy", cursive, system-ui, sans-serif;
-
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -108,17 +98,23 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 /* Base layer */
@@ -137,7 +133,7 @@
   letter-spacing: 0.01em;
 }
 
-/* Subtle transitions only (no blinking) */
+/* Subtle transitions */
 .smooth-transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
   transition-duration: 200ms;
@@ -169,36 +165,29 @@
 }
 .animate-pulse { animation: pulse 2s ease-in-out infinite; }
 
-/* Limit glow to hover-only to avoid blinking */
+/* Limit glow to hover-only */
 .glow-on-hover:hover { box-shadow: 0 0 24px color-mix(in oklab, var(--primary) 35%, transparent); }
 
-/* OKLCH fallbacks for older browsers */
+/* OKLCH fallbacks */
 @supports not (color: oklch(50% 0.2 120)) {
-  :root, .dark {
-    --card: #0e0e0e;
-    --secondary: #141414;
+  :root {
+    --card: #ffffff;
+    --secondary: #a7a9f6;
+    --destructive: #ef4444;
+  }
+  .dark {
+    --card: #1a1a1a;
+    --secondary: #b3b5ff;
     --destructive: #ef4444;
   }
 }
 
-@theme inline {
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-/* Timetable + Tabs (uses theme tokens from globals.css) */
-
+/* Timetable + Tabs */
 .tt {
   --tt-gap: 0.875rem;
   --tt-radius: var(--radius);
 }
 
-/* Page title with primary→secondary gradient */
 .tt-heading {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
@@ -206,7 +195,6 @@
   color: transparent;
 }
 
-/* Tabs bar */
 .tt-tabs {
   position: sticky;
   top: 0;
@@ -216,7 +204,6 @@
   padding-bottom: 0.25rem;
 }
 
-/* Tabs list: subtle secondary tint and scrollable */
 .tt-tablist {
   display: flex;
   gap: 0.25rem;
@@ -228,7 +215,6 @@
   padding: 0.25rem;
 }
 
-/* Tabs trigger: default, hover, focus, active (Radix data-state) */
 .tt-trigger {
   appearance: none;
   background: transparent;
@@ -257,10 +243,7 @@
   border-color: var(--primary);
 }
 
-/* Panels and cards */
-.tt-panel {
-  margin-top: var(--tt-gap);
-}
+.tt-panel { margin-top: var(--tt-gap); }
 .tt-cards {
   display: grid;
   gap: var(--tt-gap);
@@ -268,7 +251,6 @@
 @media (min-width: 640px) { .tt-cards { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1024px) { .tt-cards { grid-template-columns: 1fr 1fr 1fr; } }
 
-/* Card shell with primary accent */
 .tt-card {
   border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
   border-left: 4px solid var(--primary);
@@ -282,7 +264,6 @@
   border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
 }
 
-/* Card header with a faint secondary underlay and primary divider */
 .tt-card-header {
   padding-bottom: 0.25rem !important;
   background: color-mix(in oklch, var(--secondary) 7%, transparent);
@@ -291,11 +272,9 @@
   border-top-right-radius: calc(var(--tt-radius) - 2px);
 }
 
-/* Subject title and time */
 .tt-title-sm { font-size: 1.05rem; }
 .tt-time { color: color-mix(in oklch, var(--secondary) 45%, var(--foreground)); }
 
-/* Separator tinted by primary→secondary */
 .tt-sep {
   margin: 0.5rem 0;
   height: 1px;
@@ -307,19 +286,17 @@
   border: 0;
 }
 
-/* Meta row with a slight primary tint */
 .tt-meta {
   font-size: 0.925rem;
   color: color-mix(in oklch, var(--primary) 25%, var(--foreground));
 }
 
-/* Mess Menu UI (using existing theme tokens) */
+/* Mess Menu UI */
 .mess-app {
   --gap: 0.875rem;
   --radius: var(--radius);
 }
 
-/* Title with gradient using primary → secondary */
 .mess-title {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
@@ -331,7 +308,6 @@
   margin-bottom: 1rem;
 }
 
-/* Sticky tabs bar */
 .mess-tabs-bar {
   position: sticky;
   top: 0;
@@ -342,7 +318,6 @@
   margin-bottom: var(--gap);
 }
 
-/* Tabs list with secondary tint */
 .mess-tabs-list {
   display: flex;
   gap: 0.25rem;
@@ -354,7 +329,6 @@
   background: color-mix(in oklch, var(--secondary) 10%, transparent);
 }
 
-/* Individual tab trigger */
 .mess-tab-trigger {
   appearance: none;
   background: transparent;
@@ -386,30 +360,16 @@
   border-color: var(--primary);
 }
 
-/* Content panel */
-.mess-content {
-  margin-top: var(--gap);
-}
+.mess-content { margin-top: var(--gap); }
 
-/* Cards grid */
 .mess-cards-grid {
   display: grid;
   gap: var(--gap);
 }
 
-@media (min-width: 640px) {
-  .mess-cards-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+@media (min-width: 640px) { .mess-cards-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .mess-cards-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
-@media (min-width: 1024px) {
-  .mess-cards-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-/* Menu card */
 .mess-card {
   border: 1px solid color-mix(in oklch, var(--primary) 20%, var(--border));
   border-left: 4px solid var(--primary);
@@ -424,7 +384,6 @@
   border-color: color-mix(in oklch, var(--secondary) 35%, var(--border));
 }
 
-/* Card header */
 .mess-card-header {
   padding: 1rem;
   padding-bottom: 0.25rem;
@@ -434,7 +393,6 @@
   border-top-right-radius: calc(var(--radius) - 2px);
 }
 
-/* Card title and subtitle */
 .mess-card-title {
   font-size: 1.05rem;
   font-weight: 500;
@@ -447,12 +405,8 @@
   margin-top: 0.25rem;
 }
 
-/* Card content */
-.mess-card-content {
-  padding: 1rem;
-}
+.mess-card-content { padding: 1rem; }
 
-/* Separator */
 .mess-separator {
   margin: 0.5rem 0;
   height: 1px;
@@ -464,20 +418,16 @@
   );
 }
 
-/* Menu items list */
 .mess-items-list {
   font-size: 0.925rem;
   color: color-mix(in oklch, var(--primary) 25%, var(--foreground));
 }
 
-.mess-items-list li {
-  margin-bottom: 0.25rem;
-}
+.mess-items-list li { margin-bottom: 0.25rem; }
 
-/* Empty state */
 .mess-empty {
   opacity: 0.7;
   color: var(--muted-foreground);
   text-align: center;
-  padding: 2rem;
+  padding: 2rem;
 }

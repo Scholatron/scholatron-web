@@ -1,16 +1,44 @@
-// app/components/header.client.tsx
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut } from "lucide-react";
-import logo from "@/components/images/logo.jpg";
+import { Switch } from "@/components/ui/switch";
+import { Sun, Moon, LogOut } from "lucide-react";
+import logo from "@/components/images/logo.png";
 import { signOut } from "@/lib/auths/actions";
 
 export function SiteHeaderClient({ user }: { user: { name?: string; image?: string } | null }) {
   const router = useRouter();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Initialize theme based on system preference or saved preference
+  useEffect(() => {
+    const isDark = localStorage.getItem("theme") === "dark" || 
+      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDarkMode(isDark);
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    if (newTheme) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -19,6 +47,17 @@ export function SiteHeaderClient({ user }: { user: { name?: string; image?: stri
           <span className="font-semibold uppercase tracking-wide">SCHOLATRON</span>
         </Link>
         <div className="flex items-center gap-3">
+          {/* Theme Toggle Switch */}
+          <div className="flex items-center gap-2">
+            <Sun className="h-4 w-4 text-muted-foreground" />
+            <Switch
+              checked={isDarkMode}
+              onCheckedChange={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="data-[state=checked]:bg-primary"
+            />
+            <Moon className="h-4 w-4 text-muted-foreground" />
+          </div>
           {user ? (
             <>
               <div className="flex items-center gap-3">

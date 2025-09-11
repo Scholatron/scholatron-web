@@ -49,7 +49,7 @@ export function LoginClient() {
                <span className="font-semibold arial">Campus Connect</span>
           </div>
 
-          <CardDescription className="text-secondary-foreground">
+          <CardDescription className="text-secondary">
             Securely sign in with Google to continue
           </CardDescription>
         </CardHeader>
