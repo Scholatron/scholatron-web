@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
     });
 
     console.log("✅ Authentication cookies set, redirecting to dashboard");
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/home", request.url));
   } catch (error) {
     console.error('❌ OAuth callback error:', error);
     return NextResponse.redirect(new URL("/auth/error?error=server_error", request.url));

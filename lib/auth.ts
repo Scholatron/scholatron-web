@@ -24,7 +24,7 @@ export async function requireAuth(): Promise<void> {
 export async function redirectIfAuthed(): Promise<void> {
   const token = await getTokenFromCookie();
   if (token) {
-    redirect("/dashboard");
+    redirect("/home");
   }
 }
 

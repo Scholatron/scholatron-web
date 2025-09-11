@@ -70,7 +70,7 @@ lib/                  # Utility libraries
 
 ### Routing & Pages
 - **Public routes**: `/` (landing), `/login`, `/auth/error`
-- **Protected routes**: `/dashboard`, `/account`, `/admin/*`
+- **Protected routes**: `/home`, `/account`, `/admin/*`
 - **API routes**: `/api/auth` (auth callback), `/api/logout`
 - **Middleware**: Handles redirects based on auth state
 

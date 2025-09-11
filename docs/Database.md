@@ -52,7 +52,7 @@ This document provides a comprehensive overview of the database schema including
 ---
 
 ### 4. posts
-**Purpose:** Stores user posts/announcements
+**Purpose:** Stores user posts
 
 | Column | Type | Nullable | Default | Foreign Keys |
 |--------|------|----------|---------|--------------|
@@ -60,6 +60,7 @@ This document provides a comprehensive overview of the database schema including
 | poster | uuid | NO | - | - |
 | type | text | NO | - | - |
 | name | text | NO | - | - |
+| title | text | YES | - | - |
 | description | text | YES | - | - |
 | created_at | timestamp with time zone | YES | now() | - |
 | updated_at | timestamp with time zone | YES | now() | - |

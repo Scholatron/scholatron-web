@@ -14,7 +14,7 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get("auth_token")?.value;
 
   // If accessing dashboard (or other protected paths) without token => go to login
-  if (pathname.startsWith("/dashboard") && !token) {
+  if (pathname.startsWith("/home") && !token) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
@@ -23,7 +23,7 @@ export function middleware(req: NextRequest) {
   // If accessing login while authed => go to dashboard
   if (PUBLIC_PATHS.includes(pathname) && token) {
     const url = req.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/home";
     return NextResponse.redirect(url);
   }
 

@@ -53,7 +53,7 @@ async function EmailSignInForm() {
 export default async function EmailLoginPage() {
   const token = await getTokenFromCookie();
   if (token) {
-    redirect("/dashboard");
+    redirect("/home");
   }
 
   return (

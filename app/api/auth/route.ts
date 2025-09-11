@@ -45,5 +45,5 @@ export async function GET(request: NextRequest) {
     maxAge: 60 * 60, // 1 hour, adjust as needed
   });
 
-  return NextResponse.redirect(new URL("/dashboard", request.url));
+  return NextResponse.redirect(new URL("/home", request.url));
 }

@@ -1,19 +1,17 @@
-'use client';
-
-import { motion, Variants } from 'framer-motion';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  MessageSquare, 
-  Calendar, 
-  BookOpen, 
-  FileText, 
+// app/page.tsx
+"use client";
+import { motion, type Variants } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Users,
+  MessageSquare,
+  Calendar,
+  BookOpen,
   ShoppingBag,
   Trophy,
-  Bell,
   MapPin,
   TrendingUp,
   Lightbulb,
@@ -22,149 +20,150 @@ import {
   Zap,
   ArrowRight,
   Star,
-  GraduationCap,
-  Globe,
-  CheckCircle,
-  X,
   Building2,
-  Smartphone,
-  BarChart3,
   Heart,
   Lock,
   ChevronRight,
   Sparkles,
-  Target,
-  Menu,
-  Search
-} from 'lucide-react';
-import { SiteHeader } from '@/components/header';
-import { SiteFooter } from '@/components/footer';
-
+  Eye,
+  UserCheck,
+  Database,
+  Fingerprint,
+} from "lucide-react";
+import SiteHeader from "@/app/components/header";
+import { SiteFooter } from "@/app/components/footer";
+import { useEffect, useState } from "react";
+import { VerifiedUser } from "@/lib/auth/types";
 
 const featuresMain = [
   {
     icon: Users,
-    title: 'Posts & Feed',
-    description: 'Campus-wide updates, notes, and official posts with scoped visibility and attachment support.',
-    badge: 'Core'
+    title: "Posts & Feed",
+    description: "Campus updates, notes, and posts with scoped visibility.",
+    badge: "Core",
+    size: "large",
   },
   {
     icon: MessageSquare,
-    title: 'Chats',
-    description: '1:1 and group conversations across class, club, and hostel with role-aware permissions.',
-    badge: 'Core'
+    title: "Chats",
+    description: "1:1 and group conversations with role permissions.",
+    badge: "Core",
+    size: "medium",
   },
   {
     icon: Building2,
-    title: 'Clubs & Communities',
-    description: 'Discover, join, and engage with clubs and officer-led announcements within permissioned spaces.',
-    badge: 'Core'
+    title: "Clubs",
+    description: "Join clubs and engage with communities.",
+    badge: "Core",
+    size: "small",
   },
   {
     icon: Calendar,
-    title: 'Events',
-    description: 'Browse fests and hackathons, RSVP, and receive reminders with prioritization by memberships.',
-    badge: 'Core'
+    title: "Events",
+    description: "Browse fests, RSVP, and get reminders.",
+    badge: "Core",
+    size: "medium",
   },
   {
     icon: BookOpen,
-    title: 'Timetable & Tracker',
-    description: 'Personal and academic schedules, exam calendars, and reminders to keep workflows on track.',
-    badge: 'Core'
+    title: "Timetable",
+    description: "Personal schedules, exams, and reminders.",
+    badge: "Core",
+    size: "large",
   },
   {
     icon: ShoppingBag,
-    title: 'Marketplace',
-    description: 'Simple buy/sell listings for books and essentials with basic safety controls.',
-    badge: 'Core'
+    title: "Marketplace",
+    description: "Buy/sell books and essentials safely.",
+    badge: "Core",
+    size: "small",
+  },
+];
+
+const whyScholatronFeatures = [
+  {
+    icon: Shield,
+    title: "Unified Experience",
+    description: "Replace fragmented tools with one comprehensive platform designed specifically for campus life.",
   },
   {
-    icon: FileText,
-    title: 'Assignments & Marks',
-    description: 'Faculty announcements, submissions, grading workflows, and release notifications per course.',
-    badge: 'Core'
+    icon: UserCheck,
+    title: "Role-Aware Permissions",
+    description: "Smart access controls that understand your role as student, faculty, or admin automatically.",
   },
   {
-    icon: Bell,
-    title: 'Announcements Hub',
-    description: 'Trusted faculty/admin notices with read receipts and scoping by class or role.',
-    badge: 'Core'
+    icon: Zap,
+    title: "Real-Time Updates",
+    description: "Stay connected with instant notifications and live updates across all campus activities.",
+  },
+];
+
+const privacyFeatures = [
+  {
+    icon: Lock,
+    title: "End-to-End Encryption",
+    description: "All personal conversations and sensitive data are protected with military-grade encryption.",
   },
   {
-    icon: GraduationCap,
-    title: 'Academic Resources',
-    description: 'Curated notes, guides, previous papers, and study material mapped to courses.',
-    badge: 'Core'
+    icon: Eye,
+    title: "Granular Privacy Controls",
+    description: "Choose exactly who can see your posts, profile information, and activity status.",
   },
   {
-    icon: Target,
-    title: 'Collaboration Space',
-    description: 'Lightweight project spaces with threads, resource links, and simple task checklists.',
-    badge: 'Core'
-  }
+    icon: Database,
+    title: "Local Data Storage",
+    description: "Your academic records and personal information stay within your institution's secure servers.",
+  },
+  {
+    icon: Fingerprint,
+    title: "Secure Authentication",
+    description: "Multi-factor authentication and biometric login options keep your account protected.",
+  },
 ];
 
 const featuresAdditional = [
   {
     icon: MapPin,
-    title: 'Campus Map & Navigation',
-    description: 'Wayfinding for classrooms, hostels, cafeterias, labs, and event venues.',
-    badge: 'Additional'
+    title: "Campus Map & Navigation",
+    description: "Wayfinding for classrooms, hostels, cafeterias, labs, and event venues.",
+    badge: "Additional",
+    size: "medium",
   },
   {
     icon: TrendingUp,
-    title: 'Analytics & Insights',
-    description: 'Privacy-conscious attendance and grade trend views with personal performance indicators.',
-    badge: 'Additional'
+    title: "Analytics & Insights",
+    description: "Privacy-conscious attendance and grade trend views with personal performance indicators.",
+    badge: "Additional",
+    size: "large",
   },
   {
     icon: Trophy,
-    title: 'Rewards & Gamification',
-    description: 'Points, badges, and leaderboards to incentivize contributions and engagement.',
-    badge: 'Additional'
-  },
-  {
-    icon: Bell,
-    title: 'Smart Notifications',
-    description: 'Targeted reminders for classes, events, and deadlines by membership and preferences.',
-    badge: 'Additional'
+    title: "Rewards & Gamification",
+    description: "Points, badges, and leaderboards to incentivize contributions and engagement.",
+    badge: "Additional",
+    size: "small",
   },
   {
     icon: Lightbulb,
-    title: 'Idea & Innovation Hub',
-    description: 'Pitch ideas, form teams, and join challenges to foster student-led initiatives.',
-    badge: 'Additional'
+    title: "Idea & Innovation Hub",
+    description: "Pitch ideas, form teams, and join challenges to foster student-led initiatives.",
+    badge: "Additional",
+    size: "medium",
   },
   {
     icon: Camera,
-    title: 'Media Gallery',
-    description: 'Event and club photos/videos with selective visibility and tagging.',
-    badge: 'Additional'
-  },
-  {
-    icon: Shield,
-    title: 'Anonymous Feedback & Polls',
-    description: 'Structured faculty feedback and campus polls with guardrails against abuse.',
-    badge: 'Additional'
+    title: "Media Gallery",
+    description: "Event and club photos/videos with selective visibility and tagging.",
+    badge: "Additional",
+    size: "small",
   },
   {
     icon: Heart,
-    title: 'Interest-based Communities',
-    description: 'Topic spaces for music, sports, coding, and hobbies to promote peer learning.',
-    badge: 'Additional'
+    title: "Interest-based Communities",
+    description: "Topic spaces for music, sports, coding, and hobbies to promote peer learning.",
+    badge: "Additional",
+    size: "large",
   },
-  {
-    icon: Smartphone,
-    title: 'Digital ID & Campus Pass',
-    description: 'Digital ID and basic pass views for library, labs, and hostel check-ins.',
-    badge: 'Additional'
-  },
-  {
-    icon: Zap,
-    title: 'External Integrations',
-    description: 'Optional Google Calendar, Zoom, and LMS hooks for reduced duplication.',
-    badge: 'Additional'
-  }
 ];
 
 const containerVariants: Variants = {
@@ -173,9 +172,9 @@ const containerVariants: Variants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+      delayChildren: 0.2,
+    },
+  },
 };
 
 const itemVariants: Variants = {
@@ -183,8 +182,8 @@ const itemVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0, 0, 0.58, 1] }
-  }
+    transition: { duration: 0.5, ease: [0, 0, 0.58, 1] },
+  },
 };
 
 const heroVariants: Variants = {
@@ -192,16 +191,48 @@ const heroVariants: Variants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.8, ease: [0, 0, 0.58, 1] }
-  }
+    transition: { duration: 0.8, ease: [0, 0, 0.58, 1] },
+  },
 };
 
+const getHierarchicalGridClasses = (index: number) => {
+  if (index === 0) return "col-span-2 row-span-2";
+  if (index === 1) return "col-span-2 row-span-1";
+  if (index === 2) return "col-span-1 row-span-1";
+  if (index === 3) return "col-span-1 row-span-1";
+  if (index === 4) return "col-span-2 row-span-1";
+  return "col-span-1 row-span-1";
+};
 
 export default function LandingPage() {
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/user", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError("Failed to fetch user data");
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader />
-      {/* Hero Section */}
+      <SiteHeader user={user} />
+
+      {error && (
+        <div className="container mx-auto px-4 py-4 text-red-500">
+          {error}
+        </div>
+      )}
+
       <motion.section
         initial="hidden"
         animate="visible"
@@ -219,11 +250,12 @@ export default function LandingPage() {
               <Sparkles className="h-4 w-4" />
               Unified Campus Platform
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-6 text-balance">
               Welcome to Scholatron
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Unify academics, social life, and official communications in one student-first web app. Replace fragmented tools with a trusted, timely platform.
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 text-pretty">
+              Unify academics, social life, and official communications in one student-first web app. Replace fragmented
+              tools with a trusted, timely platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="group">
@@ -241,7 +273,6 @@ export default function LandingPage() {
         </div>
       </motion.section>
 
-      {/* Main Features Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <motion.div
@@ -252,33 +283,55 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Core Features</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
               Essential tools to streamline your campus life with seamless integration and role-aware access.
             </p>
           </motion.div>
+
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-4 grid-rows-3 gap-3 h-[600px] md:h-[500px]"
           >
-            {featuresMain.map((feature, index) => (
+            {featuresMain.slice(0, 6).map((feature, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="smooth-transition"
+                className={`${getHierarchicalGridClasses(index)} smooth-transition`}
               >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <feature.icon className="h-8 w-8 text-primary" />
-                      <Badge variant="secondary">{feature.badge}</Badge>
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group bg-card overflow-hidden">
+                  <CardHeader className="pb-1 p-2">
+                    <div className="flex items-center gap-1 mb-1">
+                      <div className="p-1 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors flex-shrink-0">
+                        <feature.icon
+                          className={`text-primary ${index === 0 || index === 4 ? "h-4 w-4" : "h-3 w-3"}`}
+                        />
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className={`${index === 0 || index === 4 ? "text-[10px]" : "text-[9px]"} flex-shrink-0 px-1 py-0`}
+                      >
+                        {feature.badge}
+                      </Badge>
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    <CardTitle
+                      className={`group-hover:text-primary transition-colors leading-tight ${
+                        index === 0 || index === 4 ? "text-sm" : "text-xs"
+                      }`}
+                    >
+                      {feature.title}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base">{feature.description}</CardDescription>
+                  <CardContent className="p-2 pt-0">
+                    <CardDescription
+                      className={`leading-tight overflow-hidden ${
+                        index === 0 || index === 4 ? "text-[11px]" : "text-[10px]"
+                      }`}
+                    >
+                      {feature.description}
+                    </CardDescription>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -287,7 +340,106 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Additional Features Section */}
+      <section className="py-20 px-4 bg-primary">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary-foreground">Why Scholatron?</h2>
+            <p className="text-xl text-primary-foreground/80 max-w-3xl mx-auto text-pretty">
+              Built specifically for modern campus life, Scholatron addresses the unique challenges students and faculty
+              face with fragmented digital tools.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {whyScholatronFeatures.map((feature, index) => (
+              <motion.div key={index} variants={itemVariants} className="smooth-transition">
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group bg-primary-foreground">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="p-3 rounded-xl bg-secondary text-secondary-foreground group-hover:scale-110 transition-transform">
+                        <feature.icon className="h-6 w-6" />
+                      </div>
+                      <CardTitle className="text-xl group-hover:text-secondary transition-colors text-foreground">
+                        {feature.title}
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base leading-relaxed text-muted-foreground">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Privacy at Scholatron</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 text-pretty">
+              Your privacy and security are our top priorities. We've built Scholatron with privacy-first principles and
+              industry-leading security measures.
+            </p>
+          </motion.div>
+
+          <div className="relative">
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-secondary/30"></div>
+
+            <div className="space-y-12">
+              {privacyFeatures.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className="relative flex items-start gap-8"
+                >
+                  <div className="relative z-10 flex-shrink-0">
+                    <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center shadow-lg">
+                      <feature.icon className="h-8 w-8 text-secondary-foreground" />
+                    </div>
+                  </div>
+
+                  <Card className="flex-1 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group bg-card">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-2xl group-hover:text-secondary transition-colors">
+                        {feature.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CardDescription className="text-lg leading-relaxed">{feature.description}</CardDescription>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 px-4 bg-muted/50">
         <div className="container mx-auto">
           <motion.div
@@ -298,33 +450,32 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Additional Features</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
               Enhance your experience with tools for navigation, engagement, and innovation.
             </p>
           </motion.div>
+
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {featuresAdditional.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="smooth-transition"
-              >
-                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <feature.icon className="h-8 w-8 text-primary" />
-                      <Badge variant="outline">{feature.badge}</Badge>
+              <motion.div key={index} variants={itemVariants} className="smooth-transition">
+                <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group bg-card">
+                  <CardHeader className="pb-6 text-center">
+                    <div className="mx-auto mb-4 p-4 bg-accent/10 rounded-2xl w-fit group-hover:bg-accent/20 transition-colors">
+                      <feature.icon className="h-12 w-12 text-accent" />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    <Badge variant="outline" className="w-fit mx-auto mb-4">
+                      {feature.badge}
+                    </Badge>
+                    <CardTitle className="text-xl group-hover:text-accent transition-colors">{feature.title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base">{feature.description}</CardDescription>
+                  <CardContent className="text-center">
+                    <CardDescription className="text-base leading-relaxed">{feature.description}</CardDescription>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -333,7 +484,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <motion.div
@@ -343,8 +493,12 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="bg-gradient-to-r from-primary to-accent rounded-2xl p-12 text-primary-foreground"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Campus Experience?</h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto">Join Scholatron today and unify your academic and social life in one powerful platform.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
+              Ready to Transform Your Campus Experience?
+            </h2>
+            <p className="text-lg mb-8 max-w-2xl mx-auto text-pretty">
+              Join Scholatron today and unify your academic and social life in one powerful platform.
+            </p>
             <Button asChild size="lg" className="bg-primary-foreground text-primary hover:bg-secondary-foreground">
               <Link href="/login">
                 Sign Up Now <Star className="h-5 w-5 ml-2 animate-pulse" />
@@ -355,7 +509,6 @@ export default function LandingPage() {
       </section>
 
       <SiteFooter />
-
-    </div>
-  );
+    </div>
+  );
 }

@@ -5,7 +5,7 @@ import { LoginClient } from "./LoginClient";
 export default async function LoginPage() {
   const token = await getTokenFromCookie();
   if (token) {
-    redirect("/dashboard");
+    redirect("/home");
   }
 
   return (
