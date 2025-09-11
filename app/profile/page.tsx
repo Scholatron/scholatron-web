@@ -1,20 +1,22 @@
-"use client";
+// app/profile/page.tsx
+'use client'
 
-import { PROFILE, Club, Post } from "@/lib/profile";
-import SiteHeader from "@/app/components/header";
-import { Sidebar } from "@/app/components/sidebar";
-import { SiteFooter } from "@/app/components/footer";
+import Image from 'next/image'
+import { PROFILE, Club, Post } from '@/lib/profile'
+import SiteHeader from '@/app/components/header'
+import { Sidebar } from '@/app/components/sidebar'
+import { SiteFooter } from '@/app/components/footer'
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
 }
 
 export default function ProfilePage() {
-  const { name, profilePic, clubs, posts, branch } = PROFILE;
+  const { name, profilePic, clubs, posts, branch } = PROFILE
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -24,9 +26,11 @@ export default function ProfilePage() {
         <main className="flex-1 max-w-4xl mx-auto px-4 py-8 space-y-8">
           {/* Profile header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6">
-            <img
+            <Image
               src={profilePic}
               alt={`${name}'s profile picture`}
+              width={96}
+              height={96}
               className="w-24 h-24 rounded-full object-cover border border-border"
             />
             <div className="mt-4 sm:mt-0">
@@ -69,12 +73,11 @@ export default function ProfilePage() {
             ) : (
               <ul className="space-y-4">
                 {posts.map((post: Post) => (
-                  <li
-                    key={post.id}
-                    className="border border-border rounded-lg p-4 bg-card"
-                  >
+                  <li key={post.id} className="border border-border rounded-lg p-4 bg-card">
                     <h3 className="text-lg font-semibold text-foreground mb-1">{post.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-2">{formatDate(post.createdAt)}</p>
+                    <p className="text-muted-foreground text-sm mb-2">
+                      {formatDate(post.createdAt)}
+                    </p>
                     <p className="text-foreground">{post.content}</p>
                   </li>
                 ))}
@@ -85,5 +88,5 @@ export default function ProfilePage() {
       </div>
       <SiteFooter />
     </div>
-  );
+  )
 }

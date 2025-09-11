@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/tooltip';
 import {
   Home,
-  Search,
   Calendar,
   IceCreamBowl,
   Bell,
@@ -34,7 +33,6 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { href: '/home', label: 'Home', icon: Home },
-  { href: '/search', label: 'Search', icon: Search },
   { href: '/timetable', label: 'Timetable', icon: Bell },
   { href: '/messages', label: 'Messages', icon: MessageSquare },
   { href: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
