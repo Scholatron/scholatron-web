@@ -1,4 +1,5 @@
-// lib/auth/actions.ts  
+// lib/auth/actions.ts
+
 "use server";
 
 import { redirect } from "next/navigation";
@@ -49,6 +50,18 @@ export async function signInWithGoogle() {
   }
 
   return redirect(data.url);
+}
+
+export async function signInWithEmail(email: string, password: string) {
+  const supabase = createSupabaseServerClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    throw new Error(`Email sign-in failed: ${error.message}`);
+  }
 }
 
 export async function signOut() {

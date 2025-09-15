@@ -2,7 +2,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/auth/error"];
+const PUBLIC_PATHS = ["/", "/login", "/login/email", "/auth/error"];
 const EXCLUDED_PREFIX = ["/_next", "/api", "/favicon.ico", "/assets", "/images"];
 
 export function middleware(req: NextRequest) {
@@ -13,14 +13,14 @@ export function middleware(req: NextRequest) {
 
   const token = req.cookies.get("auth_token")?.value;
 
-  // If accessing dashboard (or other protected paths) without token => go to login
-  if (pathname.startsWith("/home") && !token) {
+  // If accessing protected paths without token => go to login
+  if (!PUBLIC_PATHS.includes(pathname) && !token) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // If accessing login while authed => go to dashboard
+  // If accessing public paths while authed => go to home
   if (PUBLIC_PATHS.includes(pathname) && token) {
     const url = req.nextUrl.clone();
     url.pathname = "/home";

@@ -4,10 +4,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
-
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
+import { VerifiedUser } from "@/lib/auths/types";
 type Listing = {
   id: string;
   title: string;
@@ -63,6 +60,22 @@ const MOCK: Listing[] = [
 export default function MarketplacePage() {
   const [query, setQuery] = useState("");
   const [listings, setListings] = useState<Listing[]>([]);
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    fetch("/api/auth/user", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError(err);
+      });
+  }, []);
 
   useEffect(() => {
     // simulate fetch
@@ -86,94 +99,91 @@ export default function MarketplacePage() {
   }, [listings, query]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader></SiteHeader>
-            <div className="flex flex-1">
-              <Sidebar/>
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <motion.h1
-        className="text-3xl font-bold mb-6 text-foreground"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        Marketplace
-      </motion.h1>
-
-      {/* Search bar */}
-      <div className="mb-8">
-        <input
-          type="text"
-          placeholder="Search items..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="
-            w-full max-w-md px-4 py-2 border border-border rounded-lg
-            focus:outline-none focus:ring-2 focus:ring-ring
-            bg-background text-foreground placeholder:text-muted-foreground
-          "
-        />
-      </div>
-
-      {/* Listings grid */}
-      <AnimatePresence mode="popLayout">
-        <motion.div
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+    <>
+      {error && <div>{error}</div>}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <motion.h1
+          className="text-3xl font-bold mb-6 text-foreground"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
         >
-          {filtered.map(({ id, title, price, image, createdAt, tags }) => (
-            <motion.div
-              key={id}
-              className="
-                bg-card border border-border rounded-xl overflow-hidden shadow-sm
-                hover:shadow-lg transition-shadow duration-200
-              "
-              whileHover={{ scale: 1.03 }}
-            >
-              <div className="h-40 w-full bg-gray-100">
-                <img
-                  src={image}
-                  alt={title}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-foreground mb-1">
-                  {title}
-                </h2>
-                <p className="text-secondary-foreground text-sm mb-2">
-                  Posted on {new Date(createdAt).toLocaleDateString()}
-                </p>
-                <p className="text-primary font-medium mb-2">{price}</p>
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="
-                        text-[0.75rem] bg-secondary/20 text-secondary-foreground
-                        px-2 py-1 rounded-full
-                      "
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          Marketplace
+        </motion.h1>
 
-          {filtered.length === 0 && (
-            <div className="col-span-full text-center text-muted-foreground">
-              No items match your search.
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </div></div>
-        <SiteFooter></SiteFooter>
-  </div>
+        {/* Search bar */}
+        <div className="mb-8">
+          <input
+            type="text"
+            placeholder="Search items..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="
+              w-full max-w-md px-4 py-2 border border-border rounded-lg
+              focus:outline-none focus:ring-2 focus:ring-ring
+              bg-background text-foreground placeholder:text-muted-foreground
+            "
+          />
+        </div>
+
+        {/* Listings grid */}
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {filtered.map(({ id, title, price, image, createdAt, tags }) => (
+              <motion.div
+                key={id}
+                className="
+                  bg-card border border-border rounded-xl overflow-hidden shadow-sm
+                  hover:shadow-lg transition-shadow duration-200
+                "
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="h-40 w-full bg-gray-100">
+                  <img
+                    src={image}
+                    alt={title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h2 className="text-lg font-semibold text-foreground mb-1">
+                    {title}
+                  </h2>
+                  <p className="text-secondary-foreground text-sm mb-2">
+                    Posted on {new Date(createdAt).toLocaleDateString()}
+                  </p>
+                  <p className="text-primary font-medium mb-2">{price}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="
+                          text-[0.75rem] bg-secondary/20 text-secondary-foreground
+                          px-2 py-1 rounded-full
+                        "
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+
+            {filtered.length === 0 && (
+              <div className="col-span-full text-center text-muted-foreground">
+                No items match your search.
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </>
   );
 }

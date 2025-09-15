@@ -7,9 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
 import { Tabs, TabsList, TabsTrigger, TabsContent} from "@/components/ui/tabs"
 
 
@@ -81,10 +78,6 @@ export default function MessMenuPage() {
   const menu = useMemo(() => MENUS[day] ?? null, [day]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="flex-1 p-6 flex flex-col items-center bg-background text-foreground">
           <h1
             className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
@@ -126,9 +119,6 @@ export default function MessMenuPage() {
             </CardContent>
           </Card>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }
 

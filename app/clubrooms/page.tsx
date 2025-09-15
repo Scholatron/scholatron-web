@@ -8,10 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { VerifiedUser } from "@/lib/auths/types";
 
 type Club = {
   id: string;
@@ -75,13 +73,10 @@ const CLUBS: Club[] = [
 import groupFallback from "@/components/images/group.png"; // fallback logo
 
 export default function ClubsPage() {
+  const [user, setUser] = useState<VerifiedUser | null>(null);
   const [activeClub, setActiveClub] = useState(CLUBS[0].id);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="flex-1 p-6 bg-background text-foreground">
           <h1
             className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
@@ -111,9 +106,6 @@ export default function ClubsPage() {
             ))}
           </Tabs>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }
 

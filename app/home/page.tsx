@@ -1,7 +1,4 @@
 // app/home/page.tsx
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppUser, Student, VerifiedUser } from "@/lib/auths/types";
 import Link from "next/link";
@@ -50,7 +47,6 @@ interface StudentData {
 export default async function HomePage() {
   const supabase = createSupabaseServerClient();
   const { data: { user: currentUser } } = await supabase.auth.getUser();
-
   // Fetch user profile (student) and verified user info
   let headerUser: AppUser | null = null;
   if (currentUser) {
@@ -119,10 +115,6 @@ export default async function HomePage() {
     "U";
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <SiteHeader user={headerUser} />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="flex-1 px-4 py-6 md:px-8 lg:px-10">
           <section className="mx-auto max-w-5xl space-y-4">
             <Link href="/create/post">
@@ -197,7 +189,7 @@ export default async function HomePage() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage src="/placeholder-avatar.jpg" />
+                              <AvatarImage src="{avatarPlaceholder}" />
                               <AvatarFallback>{author.name?.charAt(0) || "U"}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
@@ -292,8 +284,5 @@ export default async function HomePage() {
             </section>
           </section>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -16,9 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
+import { VerifiedUser } from "@/lib/auths/types";
 
 // Sample data for each day (can be customized per day)
 const timetableData = {
@@ -61,70 +59,82 @@ const timetableData = {
 
 export default function DailyTimetable() {
   const [activeDay, setActiveDay] = useState("Monday");
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    fetch("/api/auth/user", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError(err);
+      });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="min-h-screen bg-background text-foreground p-6 flex flex-col items-center">
-          <h1
-            className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            Weekly Timetable
-          </h1>
+    <>
+      {error && <div>{error}</div>}
+          <main className="min-h-screen bg-background text-foreground p-6 flex flex-col items-center">
+            <h1
+              className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              Weekly Timetable
+            </h1>
 
-          <Card className="w-full max-w-4xl shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl text-primary">Class Schedule</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="Monday" onValueChange={setActiveDay}>
-                <TabsList className="grid w-full grid-cols-5 mb-4">
-                  {Object.keys(timetableData).map((day) => (
-                    <TabsTrigger
-                      key={day}
-                      value={day}
-                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                    >
-                      {day}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-                {Object.entries(timetableData).map(([day, schedule]) => (
-                  <TabsContent key={day} value={day}>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-1/4 text-primary">Time</TableHead>
-                          <TableHead className="w-1/4 text-primary">Subject</TableHead>
-                          <TableHead className="w-1/4 text-primary">Room</TableHead>
-                          <TableHead className="w-1/4 text-primary">Professor</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {schedule.map(({ time, subject, room, professor }, idx) => (
-                          <TableRow
-                            key={idx}
-                            className="hover:bg-muted transition-colors"
-                          >
-                            <TableCell className="font-medium">{time}</TableCell>
-                            <TableCell>{subject}</TableCell>
-                            <TableCell>{room}</TableCell>
-                            <TableCell>{professor}</TableCell>
+            <Card className="w-full max-w-4xl shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl text-primary">Class Schedule</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="Monday" onValueChange={setActiveDay}>
+                  <TabsList className="grid w-full grid-cols-5 mb-4">
+                    {Object.keys(timetableData).map((day) => (
+                      <TabsTrigger
+                        key={day}
+                        value={day}
+                        className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      >
+                        {day}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  {Object.entries(timetableData).map(([day, schedule]) => (
+                    <TabsContent key={day} value={day}>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-1/4 text-primary">Time</TableHead>
+                            <TableHead className="w-1/4 text-primary">Subject</TableHead>
+                            <TableHead className="w-1/4 text-primary">Room</TableHead>
+                            <TableHead className="w-1/4 text-primary">Professor</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TabsContent>
-                ))}
-              </Tabs>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-      <SiteFooter />
-    </div>
+                        </TableHeader>
+                        <TableBody>
+                          {schedule.map(({ time, subject, room, professor }, idx) => (
+                            <TableRow
+                              key={idx}
+                              className="hover:bg-muted transition-colors"
+                            >
+                              <TableCell className="font-medium">{time}</TableCell>
+                              <TableCell>{subject}</TableCell>
+                              <TableCell>{room}</TableCell>
+                              <TableCell>{professor}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </CardContent>
+            </Card>
+          </main>
+    </>
   );
 }

@@ -3,10 +3,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
-
 import { EngagementActions } from "@/app/components/posts/engagement-actions";
 import { Comments } from "@/app/components/posts/comments-section";
 import { ImageCarousel } from "@/app/components/posts/image-carousel";
@@ -135,17 +131,13 @@ export default async function PostPage({ params }: { params: { post_uid: string 
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="container mx-auto max-w-2xl py-8 px-4">
           <Card className="w-full">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src="/placeholder-avatar.jpg" />
+                    <AvatarImage src="{avatarPlaceholder}" />
                     <AvatarFallback>{author.name?.charAt(0) || "U"}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
@@ -227,8 +219,5 @@ export default async function PostPage({ params }: { params: { post_uid: string 
             </CardContent>
           </Card>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }

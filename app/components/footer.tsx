@@ -1,7 +1,23 @@
 // components/footer.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '@/components/images/logo.jpg'; // or use src="/logo.png" from /public
+import logo from '@/components/images/logo.png'; // or use src="/logo.png" from /public
+
+const logoVariants: Variants = {
+  hidden: { opacity: 0, rotate: 0 },
+  visible: {
+    opacity: 1,
+    rotate: 360,
+    transition: {
+      rotate: {
+        repeat: Infinity,
+        duration: 10, // Slow spin (10 seconds per rotation)
+        ease: "linear",
+      },
+      opacity: { duration: 0.5 },
+    },
+  },
+};
 
 export function SiteFooter() {
   return (

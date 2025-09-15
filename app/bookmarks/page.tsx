@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-
-import SiteHeader from "@/app/components/header";
-import { Sidebar } from "@/app/components/sidebar";
-import { SiteFooter } from "@/app/components/footer";
+import { VerifiedUser } from "@/lib/auths/types";
 
 // Mock posts data
 const ALL_POSTS = [
@@ -17,6 +14,7 @@ const ALL_POSTS = [
 const INITIAL_BOOKMARKS = new Set(["1", "3"]);
 
 export default function HomePage() {
+  const [user, setUser] = useState<VerifiedUser | null>(null);
   const [bookmarkedIds, setBookmarkedIds] = useState(INITIAL_BOOKMARKS);
   const [showBookmarks, setShowBookmarks] = useState(false);
 
@@ -37,10 +35,6 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="flex-1 max-w-4xl mx-auto p-6">
           {/* Navigation */}
           <div className="flex gap-4 mb-6">
@@ -93,8 +87,5 @@ export default function HomePage() {
             ))
           )}
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }

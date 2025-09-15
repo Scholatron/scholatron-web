@@ -1,11 +1,10 @@
 // app/profile/page.tsx
 'use client'
-
+import { useState, useEffect } from "react";
 import Image from 'next/image'
 import { PROFILE, Club, Post } from '@/lib/profile'
-import SiteHeader from '@/app/components/header'
-import { Sidebar } from '@/app/components/sidebar'
-import { SiteFooter } from '@/app/components/footer'
+import { VerifiedUser } from "@/lib/auths/types";
+import Avatar from "../components/Avatar";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString(undefined, {
@@ -16,48 +15,53 @@ function formatDate(dateStr: string) {
 }
 
 export default function ProfilePage() {
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    fetch("/api/auth/user", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError(err);
+      });
+  }, []);
+
   const { name, profilePic, clubs, posts, branch } = PROFILE
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <>
+      {error && <div>{error}</div>}
+        <main className="flex-1 p-6">
           {/* Profile header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6">
-            <Image
+          <div className="flex items-center gap-4 mb-6">
+            <Avatar
               src={profilePic}
-              alt={`${name}'s profile picture`}
-              width={96}
-              height={96}
-              className="w-24 h-24 rounded-full object-cover border border-border"
+              alt={name}
+              width={80}
+              height={80}
+              className="rounded-full"
             />
-            <div className="mt-4 sm:mt-0">
-              <h1 className="text-3xl font-bold text-foreground">{name}</h1>
-              {branch && (
-                <span
-                  className="inline-block mt-1 px-3 py-0.5 rounded-full text-sm font-medium bg-secondary/30 text-secondary-foreground border border-secondary/50 select-none"
-                  aria-label={`Branch: ${branch}`}
-                >
-                  {branch}
-                </span>
-              )}
+            <div>
+              <h1 className="text-2xl font-bold">{name}</h1>
+              {branch && <p className="text-muted-foreground">{branch}</p>}
             </div>
           </div>
 
           {/* Clubs section */}
-          <section>
-            <h2 className="text-2xl font-semibold mb-4 text-primary">Clubs</h2>
+          <section className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Clubs</h2>
             {clubs.length === 0 ? (
-              <p className="text-muted-foreground">You are not part of any clubs yet.</p>
+              <p>You are not part of any clubs yet.</p>
             ) : (
               <ul className="space-y-2">
                 {clubs.map((club: Club) => (
-                  <li
-                    key={club.id}
-                    className="py-2 px-4 border border-border rounded bg-background text-foreground"
-                  >
+                  <li key={club.id} className="border p-4 rounded-lg">
                     {club.name}
                   </li>
                 ))}
@@ -67,26 +71,22 @@ export default function ProfilePage() {
 
           {/* Posts section */}
           <section>
-            <h2 className="text-2xl font-semibold mb-4 text-primary">Your Posts</h2>
+            <h2 className="text-xl font-semibold mb-4">Your Posts</h2>
             {posts.length === 0 ? (
-              <p className="text-muted-foreground">You haven't made any posts yet.</p>
+              <p>You haven't made any posts yet.</p>
             ) : (
               <ul className="space-y-4">
                 {posts.map((post: Post) => (
-                  <li key={post.id} className="border border-border rounded-lg p-4 bg-card">
-                    <h3 className="text-lg font-semibold text-foreground mb-1">{post.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-2">
-                      {formatDate(post.createdAt)}
-                    </p>
-                    <p className="text-foreground">{post.content}</p>
+                  <li key={post.id} className="border p-4 rounded-lg">
+                    <h3 className="font-semibold">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground">{formatDate(post.createdAt)}</p>
+                    <p>{post.content}</p>
                   </li>
                 ))}
               </ul>
             )}
           </section>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
+    </>
   )
 }

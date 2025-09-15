@@ -1,14 +1,26 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
-// Header / Footer / Nav
-import SiteHeader from "@/app/components/header";
-import { SiteFooter } from "@/app/components/footer";
-import { Sidebar } from "@/app/components/sidebar";
+import { VerifiedUser } from "@/lib/auths/types";
 
 export default function SettingsPage() {
+  const [user, setUser] = useState<VerifiedUser | null>(null);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    fetch("/api/auth/user", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setError(err);
+      });
+  }, []);
+
   // Profile
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john@example.com");
@@ -56,11 +68,7 @@ export default function SettingsPage() {
 
   // Animation variants for inputs
   const inputVariants = {
-    focus: {
-      scale: 1.01,
-      boxShadow: "0 0 0 2px color-mix(in oklab, var(--ring) 20%, transparent)",
-      transition: { duration: 0.3 },
-    },
+    focus: { scale: 1.01, boxShadow: "0 0 0 2px color-mix(in oklab, var(--ring) 20%, transparent)", transition: { duration: 0.3 } },
     blur: { scale: 1, boxShadow: "none", transition: { duration: 0.3 } },
   };
 
@@ -77,296 +85,103 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <SiteHeader />
-
-      {/* Shell with Sidebar + Main */}
-      <div className="flex flex-1 min-h-0">
-        {/* Nav Sidebar */}
-        <Sidebar />
-
+    <>
+      {error && <div>{error}</div>}
         {/* Main */}
-        <main className="flex-1 overflow-auto py-12 px-4 sm:px-6 lg:px-8 bg-[var(--gradient-hero)]">
-          <motion.h1
-            className="text-4xl md:text-5xl font-black text-center mb-12 text-foreground"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            Settings
-          </motion.h1>
+        <main className="flex-1 p-6">
+          <h1 className="text-3xl font-bold mb-8">Settings</h1>
 
-          <div className="max-w-4xl mx-auto space-y-8">
-            {/* Profile Info */}
-            <motion.section
-              className="tt-card p-8"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-primary">Profile Information</h2>
-              <form onSubmit={onSaveProfile} className="space-y-6">
-                <label className="block">
-                  <span className="text-muted-foreground font-medium">Full Name</span>
-                  <motion.input
-                    type="text"
-                    className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    variants={inputVariants}
-                    whileFocus="focus"
-                  />
-                </label>
+          {/* Profile Info */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
+            <form onSubmit={onSaveProfile} className="space-y-4">
+              <label className="block">
+                Full Name
+                <motion.input type="text" value={name} onChange={(e) => setName(e.target.value)} required variants={inputVariants} whileFocus="focus" className="w-full px-4 py-2 border rounded" />
+              </label>
 
-                <label className="block">
-                  <span className="text-muted-foreground font-medium">Email Address</span>
-                  <motion.input
-                    type="email"
-                    className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    variants={inputVariants}
-                    whileFocus="focus"
-                  />
-                </label>
+              <label className="block">
+                Email Address
+                <motion.input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required variants={inputVariants} whileFocus="focus" className="w-full px-4 py-2 border rounded" />
+              </label>
+              <label className="block">
+                Phone Number
+                <motion.input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} variants={inputVariants} whileFocus="focus" className="w-full px-4 py-2 border rounded" />
+              </label>
+              <motion.button type="submit" variants={buttonVariants} whileHover="hover" whileTap="tap" className="bg-primary text-primary-foreground px-6 py-3 rounded">Save Profile</motion.button>
+            </form>
+          </motion.section>
 
-                <label className="block">
-                  <span className="text-muted-foreground font-medium">Phone Number</span>
-                  <motion.input
-                    type="tel"
-                    className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    variants={inputVariants}
-                    whileFocus="focus"
-                  />
-                </label>
+          {/* Account Settings */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Account Settings</h2>
+            <form onSubmit={onSaveAccount} className="space-y-4">
+              <label className="block">
+                Change Password
+                <motion.input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="New password" variants={inputVariants} whileFocus="focus" className="w-full px-4 py-2 border rounded" />
+              </label>
 
-                <motion.button
-                  type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Save Profile
-                </motion.button>
-              </form>
-            </motion.section>
+              <motion.button type="submit" variants={buttonVariants} whileHover="hover" whileTap="tap" className="bg-primary text-primary-foreground px-6 py-3 rounded">Update Password</motion.button>
+            </form>
+          </motion.section>
 
-            {/* Account Settings */}
-            <motion.section
-              className="tt-card p-8"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-primary">Account Settings</h2>
-              <form onSubmit={onSaveAccount} className="space-y-6">
-                <label className="block">
-                  <span className="text-muted-foreground font-medium">Change Password</span>
-                  <motion.input
-                    type="password"
-                    className="mt-2 w-full rounded-[--radius-md] border border-input px-4 py-3 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring smooth-transition"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="New password"
-                    variants={inputVariants}
-                    whileFocus="focus"
-                  />
-                </label>
-
-                <motion.button
-                  type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Update Password
-                </motion.button>
-              </form>
-            </motion.section>
-
-            {/* Notifications */}
-            <motion.section
-              className="tt-card p-8"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-primary">Notifications</h2>
-              <form onSubmit={onSaveNotifications} className="space-y-6">
-                <div className="space-y-4">
-                  <motion.label
-                    className="inline-flex items-center gap-3 cursor-pointer"
-                    variants={labelVariants}
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={notificationsEmail}
-                      onChange={(e) => setNotificationsEmail(e.target.checked)}
-                      className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                    />
-                    <span className="text-foreground font-medium">Email Notifications</span>
-                  </motion.label>
-
-                  <motion.label
-                    className="inline-flex items-center gap-3 cursor-pointer"
-                    variants={labelVariants}
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={notificationsSMS}
-                      onChange={(e) => setNotificationsSMS(e.target.checked)}
-                      className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                    />
-                    <span className="text-foreground font-medium">SMS Notifications</span>
-                  </motion.label>
-
-                  <motion.label
-                    className="inline-flex items-center gap-3 cursor-pointer"
-                    variants={labelVariants}
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={notificationsPush}
-                      onChange={(e) => setNotificationsPush(e.target.checked)}
-                      className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                    />
-                    <span className="text-foreground font-medium">Push Notifications</span>
-                  </motion.label>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Save Notifications
-                </motion.button>
-              </form>
-            </motion.section>
-
-            {/* Privacy */}
-            <motion.section
-              className="tt-card p-8"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-primary">Privacy</h2>
-              <form onSubmit={onSavePrivacy} className="space-y-6">
-                <div className="space-y-4">
-                  <motion.label
-                    className="inline-flex items-center gap-3 cursor-pointer"
-                    variants={labelVariants}
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    <input
-                      type="radio"
-                      checked={profileVisibility === "public"}
-                      onChange={() => setProfileVisibility("public")}
-                      name="profileVisibility"
-                      className="rounded-full border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                    />
-                    <span className="text-foreground font-medium">Public Profile</span>
-                  </motion.label>
-
-                  <motion.label
-                    className="inline-flex items-center gap-3 cursor-pointer"
-                    variants={labelVariants}
-                    whileHover="hover"
-                    initial="rest"
-                  >
-                    <input
-                      type="radio"
-                      checked={profileVisibility === "private"}
-                      onChange={() => setProfileVisibility("private")}
-                      name="profileVisibility"
-                      className="rounded-full border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                    />
-                    <span className="text-foreground font-medium">Private Profile</span>
-                  </motion.label>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--primary)_90%,_var(--secondary))] smooth-transition"
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
-                  Save Privacy
-                </motion.button>
-              </form>
-            </motion.section>
-
-            {/* Security */}
-            <motion.section
-              className="tt-card p-8"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-primary">Security</h2>
-              <motion.label
-                className="inline-flex items-center gap-3 cursor-pointer"
-                variants={labelVariants}
-                whileHover="hover"
-                initial="rest"
-              >
-                <input
-                  type="checkbox"
-                  checked={twoFactorAuth}
-                  onChange={(e) => setTwoFactorAuth(e.target.checked)}
-                  className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition"
-                />
-                <span className="text-foreground font-medium">
-                  Enable Two-Factor Authentication (2FA)
-                </span>
+          {/* Notifications */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Notifications</h2>
+            <form onSubmit={onSaveNotifications} className="space-y-4">
+              <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+                <input type="checkbox" checked={notificationsEmail} onChange={(e) => setNotificationsEmail(e.target.checked)} className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+                Email Notifications
               </motion.label>
-            </motion.section>
 
-            {/* Danger Zone */}
-            <motion.section
-              className="tt-card p-8 border-l-4 border-destructive"
-              variants={sectionVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <h2 className="text-3xl font-bold mb-6 text-destructive">Danger Zone</h2>
-              <motion.button
-                onClick={() =>
-                  confirm("Are you sure you want to delete your account? This action cannot be undone.") &&
-                  alert("Account deleted.")
-                }
-                className="bg-destructive text-destructive-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--destructive)_90%,_var(--secondary))] smooth-transition"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                Delete Account
-              </motion.button>
-            </motion.section>
-          </div>
+              <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+                <input type="checkbox" checked={notificationsSMS} onChange={(e) => setNotificationsSMS(e.target.checked)} className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+                SMS Notifications
+              </motion.label>
+              <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+                <input type="checkbox" checked={notificationsPush} onChange={(e) => setNotificationsPush(e.target.checked)} className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+                Push Notifications
+              </motion.label>
+
+              <motion.button type="submit" variants={buttonVariants} whileHover="hover" whileTap="tap" className="bg-primary text-primary-foreground px-6 py-3 rounded">Save Notifications</motion.button>
+            </form>
+          </motion.section>
+
+          {/* Privacy */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Privacy</h2>
+            <form onSubmit={onSavePrivacy} className="space-y-4">
+              <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+                <input type="radio" checked={profileVisibility === "public"} onChange={() => setProfileVisibility("public")} name="profileVisibility" className="rounded-full border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+                Public Profile
+              </motion.label>
+
+              <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+                <input type="radio" checked={profileVisibility === "private"} onChange={() => setProfileVisibility("private")} name="profileVisibility" className="rounded-full border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+                Private Profile
+              </motion.label>
+
+              <motion.button type="submit" variants={buttonVariants} whileHover="hover" whileTap="tap" className="bg-primary text-primary-foreground px-6 py-3 rounded">Save Privacy</motion.button>
+            </form>
+          </motion.section>
+
+          {/* Security */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible" className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Security</h2>
+            <motion.label variants={labelVariants} whileHover="hover" initial="rest" className="flex items-center gap-2">
+              <input type="checkbox" checked={twoFactorAuth} onChange={(e) => setTwoFactorAuth(e.target.checked)} className="rounded border-input text-primary focus:ring-ring w-5 h-5 smooth-transition" />
+              Enable Two-Factor Authentication (2FA)
+            </motion.label>
+          </motion.section>
+
+          {/* Danger Zone */}
+          <motion.section variants={sectionVariants} initial="hidden" animate="visible">
+            <h2 className="text-2xl font-semibold mb-4 text-destructive">Danger Zone</h2>
+            <motion.button onClick={() => confirm("Are you sure you want to delete your account? This action cannot be undone.") && alert("Account deleted.")} className="bg-destructive text-destructive-foreground px-6 py-3 rounded-[--radius-md] font-semibold hover:bg-[color-mix(in_oklab,_var(--destructive)_90%,_var(--secondary))] smooth-transition" variants={buttonVariants} whileHover="hover" whileTap="tap">
+              Delete Account
+            </motion.button>
+          </motion.section>
         </main>
-      </div>
-
-      {/* Footer */}
-      <SiteFooter />
-    </div>
+            </>
   );
 }

@@ -29,9 +29,6 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 
-import SiteHeader from "@/app/components/header";
-import { Sidebar } from "@/app/components/sidebar";
-import { SiteFooter } from "@/app/components/footer";
 
 interface Event {
   uid: string;
@@ -136,10 +133,6 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <SiteHeader />
-      <div className="flex flex-1">
-        <Sidebar />
         <main className="flex-1 container mx-auto p-6 space-y-6">
           {/* Page header and Add Event dialog */}
           <div className="flex items-center justify-between">
@@ -317,8 +310,5 @@ export default function EventsPage() {
             ))}
           </div>
         </main>
-      </div>
-      <SiteFooter />
-    </div>
   );
 }

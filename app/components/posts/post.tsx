@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-
+import avatarPlaceholder  from "@/components/images/placeholder-avatar.png"
 import { EngagementActions } from "./engagement-actions";
 import { Comments } from "./comments-section";
 import { ImageCarousel } from "./image-carousel";
@@ -79,7 +79,7 @@ export function Post({ post, files, engagements, author, currentUser }: PostProp
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Avatar className="h-10 w-10">
-              <AvatarImage src="/placeholder-avatar.jpg" />
+              <AvatarImage src="{avatarPlaceholder}" />
               <AvatarFallback>
                 {author.name?.charAt(0) || "U"}
               </AvatarFallback>

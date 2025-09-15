@@ -1,8 +1,9 @@
+// app/login/LoginClient.tsx
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import logo from "@/components/images/logo.png";    // import the PNG
+import { motion, type Variants } from "framer-motion";
+import logo from "@/components/images/logo.png";
 import {
   Card,
   CardContent,
@@ -11,8 +12,25 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Chrome, Shield, Lock, Zap } from "lucide-react";
+import { Chrome, Shield, Lock, Zap, Mail } from "lucide-react";
 import { signInWithGoogleAction } from "./actions";
+import Link from "next/link";
+
+const logoVariants: Variants = {
+  hidden: { opacity: 0, rotate: 0 },
+  visible: {
+    opacity: 1,
+    rotate: 360,
+    transition: {
+      rotate: {
+        repeat: Infinity,
+        duration: 10,
+        ease: "linear",
+      },
+      opacity: { duration: 0.5 },
+    },
+  },
+};
 
 export function LoginClient() {
   return (
@@ -24,19 +42,16 @@ export function LoginClient() {
     >
       <Card className="bg-card border border-border shadow-xl overflow-hidden">
         <CardHeader className="text-center pt-6 space-y-4">
-          <motion.div
-            className="mx-auto w-20 h-20"
-            animate={{ scale: [0.8, 1.1, 1] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
-          >
-            <Image
-              src={logo}
-              alt="Scholatron Logo"
-              width={80}
-              height={80}
-              priority
-            />
-          </motion.div>
+          <motion.img
+            src={logo.src}
+            alt="Scholatron logo"
+            width={80}
+            height={80}
+            variants={logoVariants}
+            initial="hidden"
+            animate="visible"
+            className="mx-auto mb-6"
+          />
 
           <div className="space-y-1">
             <h2 className="text-lg font-sans text-muted-foreground">
@@ -45,25 +60,38 @@ export function LoginClient() {
             <CardTitle className="text-3xl text-gradient-primary">
               <span className="font-semibold uppercase tracking-wide">SCHOLATRON</span>
             </CardTitle>
-            
-               <span className="font-semibold arial">Campus Connect</span>
+            <span className="font-semibold arial">Campus Connect</span>
           </div>
 
           <CardDescription className="text-secondary">
-            Securely sign in with Google to continue
+            Securely sign in to continue
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-8 pb-8 px-6">
-<form action={signInWithGoogleAction} className="flex justify-center">
-  <Button
-    type="submit"
-    className="w-full max-w-xs justify-center gap-2 bg-primary text-primary-foreground hover:bg-secondary smooth-transition"
-  >
-    <Chrome className="w-4 h-4" />
-    Sign in with Google
-  </Button>
-</form>
+        <CardContent className="space-y-4 pb-8 px-6">
+          <form action={signInWithGoogleAction}>
+            <Button
+              type="submit"
+              className="w-full max-w-xs mx-auto flex justify-center gap-2 bg-primary text-primary-foreground hover:bg-secondary smooth-transition"
+            >
+              <Chrome className="w-4 h-4" />
+              Sign in with Google
+            </Button>
+          </form>
+
+          <div className="relative flex justify-center text-xs uppercase text-muted-foreground">
+            <span className="bg-card px-2">or</span>
+          </div>
+
+          <Link href="/login/email">
+            <Button
+              variant="outline"
+              className="w-full max-w-xs mx-auto flex justify-center gap-2"
+            >
+              <Mail className="w-4 h-4" />
+              Sign in with Email
+            </Button>
+          </Link>
 
           <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border">
             <div className="text-center space-y-2">
